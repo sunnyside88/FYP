@@ -1,7 +1,6 @@
 import React from "react";
 import {Switch,Route} from 'react-router-dom'
 
-import Sidebar from './components/nav/Sidebar'
 import Login from './pages/auth/Login.js'
 import Register from './pages/auth/Register.js'
 
