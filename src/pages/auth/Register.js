@@ -11,14 +11,14 @@ const Register = () =>{
   const handleRegister = async (e) =>{
     e.preventDefault()
     const config = {
-      url:'http://localhost:3000/register/complete',
+      url:"http://localhost:3000/register/complete",
       handleCodeInApp:true,
     }
     setIsLoading(true)
     try{
       await auth.sendSignInLinkToEmail(email,config)
       setIsSuccessRegister(true)
-      //xxx: to be continue the coding
+      localStorage.setItem('emailForRegistration',email);
     }catch(err){
       if(err){
         console.log("err",err)
@@ -62,7 +62,7 @@ const Register = () =>{
             </div>
             <div className="form-group">
               <label>Email address</label>
-              <input type="email" className="form-control" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Enter email" />
+              <input type="email" className="form-control" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Enter email" autoFocus />
             </div>
           <div className="d-flex justify-content-center">
             <Button onClick={handleRegister} style={{display: "flex",justifyContent: "center",alignItems: "center"}} variant="primary">
