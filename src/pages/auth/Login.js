@@ -1,18 +1,23 @@
 import {Card,Button,Container} from 'react-bootstrap'
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import logo from '../../assets/Logo.png';
 
 const Login = () =>{
   const handleLogIn = () =>{
     
   }
+
+  useEffect(()=>{
+
+  },[])
+
   return(
   <Container className="d-flex vh-100" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
     <Card>
       <Card.Body>
         <div style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
-          <img style={{width:"50%"}} src={logo}/>
+          <img style={{width:"50%"}} src={logo} alt="logo"/>
         </div>
         <div className="form-group">
           <label>Email address</label>

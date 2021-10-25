@@ -58,7 +58,7 @@ const Register = () =>{
         <Card>
           <Card.Body>
             <div style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
-              <img style={{width:"50%"}} src={logo} />
+              <img style={{width:"50%"}} src={logo} alt="logo" />
             </div>
             <div className="form-group">
               <label>Email address</label>
