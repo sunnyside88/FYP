@@ -1,0 +1,16 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,700;1,400&display=swap');
+
+$labelColor : #6C6A61;
+$merriweather : 'Merriweather';
+
+label, Button {
+    color:$labelColor;
+    font-family: $merriweather;
+    font-weight: bold;
+}
+
+input[type=email],input[type="password"] {
+    border: 1px solid #6C6A61;
+    border-radius: 5px;  
+}
