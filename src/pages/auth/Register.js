@@ -2,6 +2,7 @@ import {Card,Button,Container,Toast,ToastContainer,Spinner} from 'react-bootstra
 import React, { useState } from 'react';
 import logo from '../../assets/Logo.png';
 import {auth} from '../../firebase.js'
+import { toast } from 'react-toastify';
 
 const Register = () =>{
   const [email,setEmail] = useState("");
@@ -17,12 +18,12 @@ const Register = () =>{
     setIsLoading(true)
     try{
       await auth.sendSignInLinkToEmail(email,config)
-      setIsSuccessRegister(true)
+      toast.success("Registration link is sent to your mailbox!")
       localStorage.setItem('emailForRegistration',email);
     }catch(err){
       if(err){
         console.log("err",err)
-        setIsSuccessRegister(false)
+        toast.error(err)
       }
     }
     finally{
@@ -30,30 +31,8 @@ const Register = () =>{
     }
   }
 
-  const toastSuccessEmailLink = () =>{
-    return(
-    <ToastContainer className="p-3" position="top-end">
-      <Toast bg="success" animation={true}>
-        <Toast.Body>Successfully registered!Email is send to {email}</Toast.Body>
-      </Toast>
-    </ToastContainer>
-    );
-  }
-
-  const toastUnsuccessEmailLink = () =>{
-    return(
-    <ToastContainer className="p-3" position="top-end">
-      <Toast bg="danger" animation={true}>
-        <Toast.Body>Please enter a valid email address!</Toast.Body>
-      </Toast>
-    </ToastContainer>
-    );
-  }
-
   return(
     <div>
-      {isSuccessRegister===true?toastSuccessEmailLink():""}
-      {isSuccessRegister===false?toastUnsuccessEmailLink():""}
       <Container className="d-flex vh-100" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
         <Card>
           <Card.Body>

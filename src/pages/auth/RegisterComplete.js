@@ -33,7 +33,8 @@ const RegisterComplete = ({history}) =>{
               history.push('/login')
           }
       }catch(err){
-          toast.error(err.message)
+        console.log(err)
+        toast.error(err.message)
       }
   }
 
