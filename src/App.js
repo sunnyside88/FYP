@@ -28,9 +28,6 @@ const App = () =>{
           },
         });
       }
-      else{
-        history.push('/login')
-      }
     });
     return () => unsubcribe();
   },[])
