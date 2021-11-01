@@ -1,6 +1,7 @@
 import { Card, Button, Container, Spinner, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useSelector } from 'react';
+import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
 import clipInternetSecurity from '../../assets/clip-internet-security.png';
 import { auth, googleAuthProvider } from '../../firebase.js'
@@ -9,8 +10,8 @@ import '../../sass/auth/auth-sass.scss'
 
 const ForgotPassword = () => {
     const[email,setEmail] = useState("")
-
-
+    let { user } = useSelector((state) => ({ ...state }));
+    let history = useHistory();
     const handleSend = async () =>{
         try{
             if(!email){
@@ -18,6 +19,7 @@ const ForgotPassword = () => {
                 return
             }
             await auth.sendPasswordResetEmail(email)
+            
             toast.success("Password reset email sent!")
         }catch(err){
             toast.error(err.message)
@@ -41,7 +43,7 @@ const ForgotPassword = () => {
                             <p>Enter the email address associated with your account</p>
                             <div className="form-group">
                                 <label>Email address</label>
-                                <input type="email" value={email} className="form-control" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
+                                <input type="email" value={email} className="form-control" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} autoFocus />
                             </div>
                             <div className="text-center">
                             <Button  onClick={handleSend} style={{ width: "50%", marginBottom:20 }} variant="primary">Send</Button>
