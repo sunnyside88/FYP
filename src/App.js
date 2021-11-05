@@ -6,13 +6,16 @@ import Register from './pages/auth/Register.js'
 import Home from './pages/auth/Home.js'
 import { auth } from "./firebase.js";
 import RegisterComplete from "./pages/auth/RegisterComplete.js";
-
+import { useHistory } from "react-router";
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ForgotPassword from "./pages/auth/ForgotPassword.js";
 
 const App = () =>{
   const dispatch = useDispatch()
+  let history = useHistory()
+
   useEffect(()=>{
     const unsubcribe = auth.onAuthStateChanged(async(user)=>{
       if(user){

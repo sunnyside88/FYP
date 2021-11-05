@@ -1,4 +1,4 @@
-import {Card,Button,Container,Toast,ToastContainer,Spinner} from 'react-bootstrap'
+import {Card,Button,Container} from 'react-bootstrap'
 import React, { useEffect, useState } from 'react';
 import logo from '../../assets/Logo.png';
 import {auth} from '../../firebase.js'
@@ -28,11 +28,13 @@ const RegisterComplete = ({history}) =>{
               const user = auth.currentUser
               user.updatePassword(password)
               const idTokenResult = await user.getIdTokenResult()
+              console.log("user_id_token",idTokenResult)
               toast.success("Registration Completed!")
               history.push('/login')
           }
       }catch(err){
-          toast.error(err.message)
+        console.log(err)
+        toast.error(err.message)
       }
   }
 
@@ -42,7 +44,7 @@ const RegisterComplete = ({history}) =>{
         <Card>
           <Card.Body>
             <div style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
-              <img style={{width:"50%"}} src={logo} />
+              <img style={{width:"50%"}} src={logo} alt="Logo"/>
             </div>
             <div className="form-group">
               <label>Email address</label>
