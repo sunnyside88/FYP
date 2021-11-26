@@ -5,8 +5,10 @@ import 'react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css';
 
 import { Figure } from 'react-bootstrap';
 import logo from "../../assets/Logo.png"
+import { useHistory } from 'react-router';
 
-const sideBar = ()=>{
+const SideBar = ()=>{
+  let history = useHistory()
     return (
       <>
       <Figure style={{marginLeft:"55px"}}>
@@ -19,9 +21,9 @@ const sideBar = ()=>{
       </Figure>
         <Navigation
             // you can use your own router's api to get pathname
-            activeItemId="/management/members"
+            activeItemId="/product"
             onSelect={({itemId}) => {
-              // maybe push to the route
+              history.push(itemId)
             }}
             items={[
               {
@@ -29,16 +31,16 @@ const sideBar = ()=>{
                 itemId: '/dashboard',
               },
               {
-                title: 'Management',
-                itemId: '/management',
+                title: 'Product',
+                itemId: '#',
                 subNav: [
                   {
-                    title: 'Projects',
-                    itemId: '/management/projects',
+                    title: 'All Products',
+                    itemId: '/products',
                   },
                   {
-                    title: 'Members',
-                    itemId: '/management/members',
+                    title: 'Product Category',
+                    itemId: '/products/categ',
                   },
                 ],
               },
@@ -58,4 +60,4 @@ const sideBar = ()=>{
     );
 }
 
-export default sideBar;
+export default SideBar;

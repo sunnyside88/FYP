@@ -17,8 +17,9 @@ const Header = () => {
     let { user } = useSelector((state) => ({ ...state }));
     
     useEffect(() => {
+        console.log(user,"user")
         if(!user){
-            history.push('/login')
+            //history.push('/login')
             return
         }
         let isMounted = true

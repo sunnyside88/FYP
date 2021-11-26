@@ -11,6 +11,7 @@ import { useHistory } from "react-router";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ForgotPassword from "./pages/auth/ForgotPassword.js";
+import Listing from "./pages/product/Listing.js";
 
 const App = () =>{
   const dispatch = useDispatch()
@@ -36,6 +37,7 @@ const App = () =>{
     <div>
       <Switch>
         <Route exact path='/' component={Home}/>
+        <Route exact path='/products' component={Listing}/>
         <Route exact path='/login' component={Login}/>
         <Route exact path='/register' component={Register}/>
         <Route exact path='/register/complete' component={RegisterComplete}/>

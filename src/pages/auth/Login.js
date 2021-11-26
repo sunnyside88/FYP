@@ -7,6 +7,18 @@ import ForgotPassword from './ForgotPassword';
 import { auth, googleAuthProvider } from '../../firebase.js'
 import { toast } from 'react-toastify';
 import '../../sass/auth/auth-sass.scss'
+import axios from 'axios';
+
+const createOrUpdateUser = async (userToken) => {
+  return await axios.post(
+    `${process.env.REACT_APP_API_ENDPOINT}/create-or-update-user`, {}, 
+    {
+      headers:{
+        userToken,
+      },
+    }
+  );
+};
 
 const Login = ({ history }) => {
   const [email, setEmail] = useState("");
@@ -25,6 +37,11 @@ const Login = ({ history }) => {
       var res = await auth.signInWithEmailAndPassword(email, password)
       const { user } = res
       const idTokenResult = await user.getIdTokenResult()
+
+      createOrUpdateUser(idTokenResult)
+      .then((res)=>console.log("fe:create or update user",res))
+      .catch();
+
       dispatch({
         type: "LOGGED_IN_USER",
         payload: {
@@ -40,7 +57,7 @@ const Login = ({ history }) => {
     finally {
       setIsLoading(false)
     }
-  }
+  };
 
   const googleLogin = async () => {
     try {
@@ -60,11 +77,7 @@ const Login = ({ history }) => {
       toast.error(err.message)
     }
 
-  }
-
-  useEffect(() => {
-
-  }, [])
+  };
 
   return (
     <div>
@@ -121,6 +134,6 @@ const Login = ({ history }) => {
     </Container>
     </div>
   );
-}
+};
 
 export default Login;
