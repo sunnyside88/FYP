@@ -1,5 +1,7 @@
 import { Space } from 'antd'
 import { view } from '../../utils/ProductService';
+import {EyeOutlined,EditOutlined,DeleteOutlined} from '@ant-design/icons';
+
 export default [
     {
       title: 'Name',
@@ -31,9 +33,9 @@ export default [
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <a onClick={view} style={{color:"blue"}}>View</a>
-          <a style={{color:"blue"}}>Edit</a>
-          <a style={{color:"red"}}>Delete</a>
+          <a onClick={view}><EyeOutlined /></a>
+          <a ><EditOutlined /></a>
+          <a ><DeleteOutlined /></a>
         </Space>
       ),
     },
