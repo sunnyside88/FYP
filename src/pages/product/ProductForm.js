@@ -15,12 +15,6 @@ import { connect } from 'react-redux';
 import ProductFormTabSchema from '../../schema/product/ProductFormTabSchema';
 
 const ProductForm = () => {
-    const { id } = useParams();
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        dispatch(fetchProduct(id))
-    },[])
 
     return (
         <div className="container-fluid p-0">
