@@ -1,6 +1,7 @@
 import { Space } from 'antd'
 import { view } from '../../utils/ProductService';
 import {EyeOutlined,EditOutlined,DeleteOutlined} from '@ant-design/icons';
+import { useHistory } from 'react-router';
 
 export default [
     {
@@ -31,13 +32,6 @@ export default [
     {
       title: 'Action',
       key: 'action',
-      render: (text, record) => (
-        <Space size="middle">
-          <a onClick={view}><EyeOutlined /></a>
-          <a ><EditOutlined /></a>
-          <a ><DeleteOutlined /></a>
-        </Space>
-      ),
     },
   ];
 

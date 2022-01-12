@@ -13,6 +13,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import ForgotPassword from "./pages/auth/ForgotPassword.js";
 import Listing from "./pages/product/ProductListing.js";
 import ProductForm from "./pages/product/ProductForm.js";
+import CartForm from "./pages/pos/CartForm"
+import UomList from "./pages/others/UomList.js";
 
 const App = () =>{
   const dispatch = useDispatch()
@@ -38,6 +40,8 @@ const App = () =>{
     <div>
       <Switch>
         <Route exact path='/' component={Home}/>
+        <Route exact path='/pos' component={CartForm}/>
+        <Route exact path='/others/uom' component={UomList}/>
         <Route exact path='/products' component={Listing}/>
         <Route exact path='/products/:id' component={ProductForm}/>
         <Route exact path='/login' component={Login}/>

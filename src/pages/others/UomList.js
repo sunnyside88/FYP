@@ -10,7 +10,7 @@ import Sidebar from '../../components/nav/Sidebar';
 import Header from '../../components/nav/Header';
 import ProductSchema from '../../schema/product/ProductColumnSchema';
 
-const CartForm = () => {
+const UomList = () => {
     const onSearch = value => console.log(value);
     const { Search } = Input;
 
@@ -23,7 +23,8 @@ const CartForm = () => {
                 <div className="col">
                     <Header></Header>
                     <div className="col-4">
-                        <h3 style={{ marginTop: 10 }} >POS</h3>
+                        <h3 style={{ marginTop: 10 }} >Unit of Measure</h3>
+                        <Button type="primary" shape="round">Import</Button>
                     </div>
 
                     <div style={{ padding: 10 }}>
@@ -35,4 +36,4 @@ const CartForm = () => {
     )
 }
 
-export default CartForm;
+export default UomList;

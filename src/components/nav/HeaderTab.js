@@ -9,10 +9,10 @@ const HeaderTab = ({ tabSchema }) => {
   }
 
   return (
-    <Tabs defaultActiveKey="1" onChange={callback}>
+    <Tabs defaultActiveKey='1' onChange={callback}>
       {tabSchema.map((item, index) => {
         return <TabPane
-          tab={item.tab} key={index}>
+          tab={item.tab} key={item.key}>
             {item.content}
         </TabPane>
       })}

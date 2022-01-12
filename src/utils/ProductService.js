@@ -1,9 +1,13 @@
-const view = () =>{
-    //call api/product/:id
+
+
+const view = (record) =>{
+
 }
 
 
 const edit = () =>{
 
 }
-module.exports.view = view
+module.exports = {
+    View:view
+}
