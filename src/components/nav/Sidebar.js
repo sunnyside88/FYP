@@ -31,11 +31,29 @@ const SideBar = () => {
             itemId: '/dashboard',
           },
           {
+            title: 'Inventory',
+            itemId: '#',
+            subNav: [
+              {
+                title: 'Location',
+                itemId: '/#',
+              },
+            ],
+          },
+          {
             title: 'Sales',
             itemId: '#',
             subNav: [
               {
                 title: 'POS',
+                itemId: '/pos',
+              },
+              {
+                title: 'Invoice',
+                itemId: '/pos',
+              },
+              {
+                title: 'Payment',
                 itemId: '/pos',
               },
             ],

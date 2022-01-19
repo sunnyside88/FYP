@@ -29,7 +29,8 @@ const Listing = () => {
     };
 
     const handleImportOk = () => {
-        setVisibleImport(false);
+        getProducts()
+        setVisibleImport(false)
     };
 
     async function getProducts() {
@@ -79,7 +80,7 @@ const Listing = () => {
                 <div className="col">
                     <Header></Header>
                     <div className="col-4">
-                        <ImportModal modal="Product" onOk={handleImportOk} onCancel={handleImportCancel} isModalVisible={visibleImport}></ImportModal>
+                        <ImportModal modal="Product"  onCancel={handleImportCancel} isModalVisible={visibleImport} setVisible={setVisibleImport}></ImportModal>
                         <h3 style={{ marginTop: 10 }} >Product Listing</h3>
                         <Button style={{ marginRight: 10 }} type="primary" shape="round"> New Product </Button>
                         <Button onClick={showImport} style={{ marginRight: 10 }} type="primary" shape="round"> Import </Button>
