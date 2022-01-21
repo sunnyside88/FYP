@@ -1,8 +1,9 @@
 import { Modal, Button, Progress } from 'antd'
+import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { importFile } from '../../data/product.api';
 
-const ImportModal = ({ isModalVisible, modal, setVisible }) => {
+const ImportModal = ({ isModalVisible, modal, setVisible, getProducts }) => {
   const [csvFile, setCsvFile] = useState("");
   const [key, setKey] = useState("")
   const [modalText, setModalText] = useState("Import " + modal);
@@ -14,19 +15,24 @@ const ImportModal = ({ isModalVisible, modal, setVisible }) => {
     setCsvFile(file)
   }
 
-  const handleOk = () =>{
+  const handleOk = () => {
     setKey(Date.now())
     setVisible(false)
     setShowProgress(false)
+    getProducts()
   }
 
-  const handleCancel = () =>{
+  const handleCancel = () => {
     setKey(Date.now())
     setVisible(false)
     setShowProgress(false)
   }
 
   const upload = async () => {
+    if (!csvFile) {
+      toast.error("Missing upload file!")
+      return
+    }
     let csvData = new FormData();
     csvData.append("file", csvFile);
     await importFile(csvData, setProgress, setShowProgress)

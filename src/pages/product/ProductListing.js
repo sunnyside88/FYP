@@ -1,10 +1,10 @@
-import { Table, Input, Space, Button } from 'antd'
+import { Table, Input, Space, Button, Modal } from 'antd'
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 
 import axios from 'axios';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext } from 'react';
 import { useHistory } from 'react-router';
 
 import Sidebar from '../../components/nav/Sidebar';
@@ -18,6 +18,9 @@ const Listing = () => {
     const [showListing, setShowListing] = useState(true)
     const [visibleImport, setVisibleImport] = useState(false);
 
+    const [modal, contextHolder] = Modal.useModal();
+    const ReachableContext = createContext();
+
     let history = useHistory()
 
     const showImport = () => {
@@ -26,11 +29,6 @@ const Listing = () => {
 
     const handleImportCancel = () => {
         setVisibleImport(false);
-    };
-
-    const handleImportOk = () => {
-        getProducts()
-        setVisibleImport(false)
     };
 
     async function getProducts() {
@@ -44,6 +42,15 @@ const Listing = () => {
             })
     }
 
+    async function deleteProduct(id) {
+        axios.post("http://localhost:8000/api/products/deleteOne", {
+            id: id
+        }).then(res => {
+            console.log(`statusCode: ${res.status}`)
+            console.log(res)
+        })
+    }
+
     async function renderSchema() {
         productColumnSchema.at(-1).render = (text, record) => (
             <Space size="middle">
@@ -54,7 +61,19 @@ const Listing = () => {
                     history.push(`/products/${record._id}`)
                 }} ><EditOutlined /></a>
                 <a onClick={() => {
-                    history.push(`/products/${record._id}`)
+                    const deleteConfig = {
+                        title: 'Delete Record?',
+                        content: (
+                            <>
+                                <p>Are you sure you want to delete this?</p>
+                            </>
+                        ),
+                        onOk: async () => {
+                            await deleteProduct(record._id)
+                            await getProducts()
+                        }
+                    };
+                    modal.confirm(deleteConfig);
                 }}><DeleteOutlined /></a>
             </Space>
         )
@@ -80,7 +99,7 @@ const Listing = () => {
                 <div className="col">
                     <Header></Header>
                     <div className="col-4">
-                        <ImportModal modal="Product"  onCancel={handleImportCancel} isModalVisible={visibleImport} setVisible={setVisibleImport}></ImportModal>
+                        <ImportModal modal="Product" onCancel={handleImportCancel} isModalVisible={visibleImport} setVisible={setVisibleImport} getProducts={getProducts}></ImportModal>
                         <h3 style={{ marginTop: 10 }} >Product Listing</h3>
                         <Button style={{ marginRight: 10 }} type="primary" shape="round"> New Product </Button>
                         <Button onClick={showImport} style={{ marginRight: 10 }} type="primary" shape="round"> Import </Button>
@@ -100,6 +119,8 @@ const Listing = () => {
                             columns={productColumnSchema}
                         >
                         </Table>
+                        {contextHolder}
+
                     </div>
                 </div>
             </div>
