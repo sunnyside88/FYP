@@ -42,12 +42,6 @@ const Listing = () => {
                     Object.assign(element, { key: index })
                 });
                 setProducts(data)
-                dispatch({
-                    type:"REFRESH_PRODUCT_LIST",
-                    payload:{
-                      products:data,
-                    },
-                  });
             })
     }
 

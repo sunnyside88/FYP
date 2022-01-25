@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
-import Navbar from 'react-bootstrap/Navbar'
-import moment from "moment";
+import axios from 'axios';
+
 import { auth } from '../../firebase.js';
+
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+
 import { BsFillClockFill, BsFillCalendar2MinusFill, BsFillDoorOpenFill } from "react-icons/bs";
-import axios from 'axios';
+import Navbar from 'react-bootstrap/Navbar'
+import moment from "moment";
 
 const Header = () => {
     const [formmattedDate, setFormattedDate] = useState("")
