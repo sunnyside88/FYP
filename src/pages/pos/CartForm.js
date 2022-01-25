@@ -6,16 +6,32 @@ import axios from 'axios';
 
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import {useSelector} from 'react-redux'
 
 import Sidebar from '../../components/nav/Sidebar';
 import Header from '../../components/nav/Header';
 import ProductSchema from '../../schema/product/ProductColumnSchema';
 
 const CartForm = () => {
-    const { Option } = Select;
-    const handleSelect = (key) =>{
-        console.log(key, "xxxvalue")
+    const {products} = useSelector((state) => state.products)
+    const [options,setOptions] = useState([])
+    
+    const handleSelect = (key,value,name) =>{
+        console.log(name,"xxxvalue")
     }
+
+    useEffect(()=>{
+        console.log(products)
+            let arr = []
+            products[0].products.map(prod=>{
+                arr.push({
+                    value:prod._id,
+                    label:`[${prod.code}] ${prod.name}`
+                })
+            })
+            setOptions(arr)
+    },[products])
+
     return (
         <div className="container-fluid p-0">
             <div className="row no-gutters">
@@ -41,9 +57,8 @@ const CartForm = () => {
                                     optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
                                 }
                                 onSelect={handleSelect}
+                                options={options}
                             >
-                                <Option key='1' value="1">[xxxx]Bolt</Option>
-                                <Option key='2' value="2">[1234]Kopi</Option>
                             </Select>
                             <div style={{ padding: 10 }}>
                                 <Table

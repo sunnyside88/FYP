@@ -1,11 +1,13 @@
-import { FETCH_REQUEST, FETCH_SUCCESS } from "../constant/constant";
+import { REFRESH_PRODUCT_LIST} from "../constant/constant";
 
-export function productReducer(state={},action){
+const initialState = {
+    products: [],
+}
+
+export function productReducer(state=initialState,action){
     switch(action.type){
-        case FETCH_REQUEST:
-            return action.payload;
-         case FETCH_SUCCESS:
-             return action.payload;
+        case REFRESH_PRODUCT_LIST:
+            return {...state, products:[action.payload]}
          default:
              return state;
     }

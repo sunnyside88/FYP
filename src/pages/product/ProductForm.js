@@ -1,16 +1,9 @@
 import { Table, Input, Space, Button } from 'antd'
 import 'antd/dist/antd.css';
 
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-
 import Sidebar from '../../components/nav/Sidebar';
 import Header from '../../components/nav/Header';
 import HeaderTab from '../../components/nav/HeaderTab';
-import { fetchProduct } from '../../actions/fetchProduct';
-import { connect } from 'react-redux';
 
 import ProductFormTabSchema from '../../schema/product/ProductFormTabSchema';
 

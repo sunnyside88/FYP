@@ -5,6 +5,7 @@ import 'antd/dist/antd.css';
 import axios from 'axios';
 
 import { useEffect, useState, createContext } from 'react';
+import { useDispatch } from "react-redux";
 import { useHistory } from 'react-router';
 
 import Sidebar from '../../components/nav/Sidebar';
@@ -22,6 +23,7 @@ const Listing = () => {
     const ReachableContext = createContext();
 
     let history = useHistory()
+    const dispatch = useDispatch()
 
     const showImport = () => {
         setVisibleImport(true);
@@ -31,6 +33,7 @@ const Listing = () => {
         setVisibleImport(false);
     };
 
+    //san: remove this and retrive from redux store
     async function getProducts() {
         axios.get("http://localhost:8000/api/products", { crossdomain: true })
             .then(res => {
@@ -39,6 +42,12 @@ const Listing = () => {
                     Object.assign(element, { key: index })
                 });
                 setProducts(data)
+                dispatch({
+                    type:"REFRESH_PRODUCT_LIST",
+                    payload:{
+                      products:data,
+                    },
+                  });
             })
     }
 

@@ -3,9 +3,9 @@ import Navbar from 'react-bootstrap/Navbar'
 import moment from "moment";
 import { auth } from '../../firebase.js';
 import { useDispatch, useSelector } from "react-redux";
-import { useContext } from "react";
 import { useHistory } from "react-router";
 import { BsFillClockFill, BsFillCalendar2MinusFill, BsFillDoorOpenFill } from "react-icons/bs";
+import axios from 'axios';
 
 const Header = () => {
     const [formmattedDate, setFormattedDate] = useState("")
@@ -18,6 +18,7 @@ const Header = () => {
     
     useEffect(() => {
         console.log(user,"user")
+        getProducts()
         if(!user){
             //history.push('/login')
             return
@@ -33,7 +34,7 @@ const Header = () => {
             setUserName(user.email.substring(0, user.email.indexOf("@")))
         }
         return () => { isMounted = false }
-    }, [])
+    },[])
 
     const logout = () => {
         auth.signOut()
@@ -42,6 +43,23 @@ const Header = () => {
             payload: null,
         })
         history.push("/login")
+    }
+
+    //throw into store-experimenting
+    async function getProducts() {
+        axios.get("http://localhost:8000/api/products", { crossdomain: true })
+            .then(res => {
+                let data = res.data
+                data.forEach(function (element, index) {
+                    Object.assign(element, { key: index })
+                });
+                dispatch({
+                    type:"REFRESH_PRODUCT_LIST",
+                    payload:{
+                      products:data,
+                    },
+                  });
+            })
     }
 
     return (
