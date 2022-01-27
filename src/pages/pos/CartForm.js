@@ -1,4 +1,6 @@
-import { Table, Input, Row, Col, Select } from "antd";
+import { Table, Space, Row, Col, Select, Button, InputNumber } from "antd";
+import { toast } from 'react-toastify';
+import { MinusCircleOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 
 import { useEffect, useState } from "react";
@@ -8,14 +10,15 @@ import { useSelector } from "react-redux";
 import Sidebar from "../../components/nav/Sidebar";
 import Header from "../../components/nav/Header";
 
+import PosCartColumnSchema from "../../schema/pos/PosCartColumnSchema";
+
 const CartForm = () => {
   const { products } = useSelector((state) => state.products);
-  const [options, setOptions] = useState([]);
-
-  const handleSelect = (key, value, name) => {
-    console.log(name, "xxxvalue");
-  };
-
+  const [posCartColumnSchema, setPosCartColumnSchema] = useState(PosCartColumnSchema)
+  const [options, setOptions] = useState([])
+  const [enteredItemId, setEnteredItemId] = useState("")
+  const [cartItem,setCartItem] = useState([])
+  
   useEffect(() => {
     if (products.length > 0) {
       let arr = [];
@@ -27,7 +30,51 @@ const CartForm = () => {
       });
       setOptions(arr);
     }
+    renderSchema()
   }, [products]);
+
+  async function renderSchema() {
+    posCartColumnSchema.at(4).render = (text, record) => (
+        <InputNumber step={1}/>
+    )
+
+    posCartColumnSchema.at(-1).render = (text, record) => (
+      <Space size="middle">
+          <a onClick={() => {
+          }} ><MinusCircleOutlined style={{color:"red"}} /></a>
+      </Space>
+  )
+    setPosCartColumnSchema(posCartColumnSchema)
+}
+
+  const handleSelect = (value) => {
+    setEnteredItemId(value)
+  };
+
+  const enterProduct = () =>{
+    if(!enteredItemId){
+      toast.error("Missing product!")
+      return
+    }
+    const line = products[0].products.filter(x=>x._id==enteredItemId)
+    let lines = JSON.parse(JSON.stringify(cartItem))
+    lines.push(line[0])
+    lines.map((x,index)=>{
+      x["key"] = index
+    })
+    setCartItem(lines)
+  }
+
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User',
+      // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
 
   return (
     <div className="container-fluid p-0">
@@ -41,26 +88,25 @@ const CartForm = () => {
             <h3 style={{ marginTop: 10 }}>POS</h3>
           </div>
           <Row type="flex">
-            <Col flex={3} style={{ color: "CCD1E4" }}>
+            <Col flex={2} style={{ color: "CCD1E4" }}>
               <Select
                 showSearch
                 style={{ width: 300, paddingLeft: 10 }}
                 placeholder="Search to Select"
                 optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
+                filterOption={(input, option) => {
+                  return(
+                    option.value?.toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
+                    option.label?.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  )
                 }
-                filterSort={(optionA, optionB) =>
-                  optionA.children
-                    .toLowerCase()
-                    .localeCompare(optionB.children.toLowerCase())
                 }
                 onSelect={handleSelect}
                 options={options}
               ></Select>
+              <Button onClick={enterProduct}>Enter</Button>
               <div style={{ padding: 10 }}>
-                <Table></Table>
+                <Table size="small" rowSelection={rowSelection} columns={PosCartColumnSchema} dataSource={cartItem}></Table>
               </div>
             </Col>
             <Col flex={1}>
@@ -68,7 +114,7 @@ const CartForm = () => {
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
-                  borderLeft: "solid",
+                  borderLeft: "solid",  
                 }}
               ></div>
             </Col>
