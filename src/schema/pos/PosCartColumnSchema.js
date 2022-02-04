@@ -27,6 +27,8 @@ export default [
       title: 'Qty',
       dataIndex: 'qty',
       key: 'qty',
+      editable: true,
+      inputType: "number",
       width: '50px',
     },
     {
