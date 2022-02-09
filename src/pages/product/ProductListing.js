@@ -41,6 +41,7 @@ const Listing = () => {
                 data.forEach(function (element, index) {
                     Object.assign(element, { key: index })
                 });
+                console.log(data,"data")
                 setProducts(data)
             })
     }
@@ -58,6 +59,7 @@ const Listing = () => {
         productColumnSchema.at(-1).render = (text, record) => (
             <Space size="middle">
                 <a onClick={() => {
+                    console.log(record,"record")
                     history.push(`/products/${record._id}`)
                 }} ><EyeOutlined /></a>
                 <a onClick={() => {

@@ -1,4 +1,17 @@
-import { Table, Space, Row, Col, Select, Button, InputNumber } from "antd";
+import {
+  Table,
+  Space,
+  Row,
+  Col,
+  Card,
+  Select,
+  Button,
+  InputNumber,
+  Statistic,
+  Typography,
+  Divider,
+  Modal,
+} from "antd";
 import { toast } from "react-toastify";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
@@ -15,9 +28,18 @@ import PosCartColumnSchema from "../../schema/pos/PosCartColumnSchema";
 const CartForm = () => {
   const { products } = useSelector((state) => state.products);
   const [posCartColumnSchema, setPosCartColumnSchema] = useState(PosCartColumnSchema);
-  const [options, setOptions] = useState([]);
+  const [productOptions, setProductOptions] = useState([]);
+
+  const { contacts } = useSelector((state) => state.contacts);
+  const [contactOptions, setContactOptions] = useState([]);
+
   const [enteredItemId, setEnteredItemId] = useState("");
   const [cartItem, setCartItem] = useState([]);
+  const [totalAmtCart, setTotalAmtCart] = useState(0);
+
+  const [modal, contextHolder] = Modal.useModal();
+
+  const { Text } = Typography;
 
   useEffect(() => {
     if (products.length > 0) {
@@ -28,10 +50,20 @@ const CartForm = () => {
           label: `[${prod.code}] ${prod.name}`,
         });
       });
-      setOptions(arr);
+      setProductOptions(arr);
+    }
+    if(contacts.length>0){
+      let arr = [];
+      contacts[0].contacts.map((con) => {
+        arr.push({
+          value: con._id,
+          label: `[${con.code}] ${con.name}`,
+        });
+      });
+      setContactOptions(arr)
     }
     renderSchema();
-  }, [products, cartItem]);
+  }, [products, contacts,cartItem]);
 
   const onChangeQty = (value, record) => {
     let totalAmt = value * record.price;
@@ -43,8 +75,23 @@ const CartForm = () => {
       }
     });
     console.log(lines);
+    onChangeTotalAmtCart(lines);
     setCartItem(lines);
   };
+
+  const onChangeTotalAmtCart = (lines) => {
+    let total = 0;
+    lines.map((x) => {
+      total += x.amount;
+    });
+    setTotalAmtCart(total);
+  };
+
+  async function deleteCartItem(id) {
+    let lines = JSON.parse(JSON.stringify(cartItem));
+    let filteredLine = lines.filter(function(el) { return el._id != id; })
+    setCartItem(filteredLine)
+  }
 
   async function renderSchema() {
     posCartColumnSchema.at(4).render = (text, record) => (
@@ -61,18 +108,30 @@ const CartForm = () => {
     posCartColumnSchema.at(5).render = (text, record) => (
       <span>{record.amount.toFixed(2)}</span>
     );
-    console.log(posCartColumnSchema.at(4), "xxxschema");
     posCartColumnSchema.at(-1).render = (text, record) => (
       <Space size="middle">
-        <a onClick={() => {}}>
-          <MinusCircleOutlined style={{ color: "red" }} />
-        </a>
+        <a
+          onClick={() => {
+            const deleteConfig = {
+              title: "Delete Item?",
+              content: (
+                <>
+                  <p>Are you sure you want to delete this?</p>
+                </>
+              ),
+              onOk: async () => {
+                await deleteCartItem(record._id);
+              },
+            };
+            modal.confirm(deleteConfig);
+          }}
+        ><MinusCircleOutlined style={{ color: "red" }} /></a>
       </Space>
     );
     setPosCartColumnSchema(posCartColumnSchema);
   }
 
-  const handleSelect = (value) => {
+  const handleProductSelect = (value) => {
     setEnteredItemId(value);
   };
 
@@ -98,8 +157,7 @@ const CartForm = () => {
       newProduct.key = newProduct._id;
       lines.push(newProduct);
     }
-    console.log(lines, "xxxcartitem");
-
+    onChangeTotalAmtCart(lines);
     setCartItem(lines);
   };
 
@@ -126,15 +184,9 @@ const CartForm = () => {
         </div>
         <div className="col">
           <Header></Header>
-          <div style={{ display: "flex" }}>
-            <div className="col-10">
-              <h3 style={{ marginTop: 10 }}>POS</h3>
-            </div>
-            <h3 style={{ marginTop: 10 }}>{total}</h3>
-          </div>
-
-          <Row type="flex">
+          <Row type="flex" style={{ height: "100vh" }}>
             <Col flex={2} style={{ color: "CCD1E4" }}>
+              <h3 style={{ marginTop: 10, paddingLeft: 10 }}>POS</h3>
               <Select
                 showSearch
                 style={{ width: 300, paddingLeft: 10 }}
@@ -148,10 +200,12 @@ const CartForm = () => {
                       0
                   );
                 }}
-                onSelect={handleSelect}
-                options={options}
+                onSelect={handleProductSelect}
+                options={productOptions}
               ></Select>
-              <Button onClick={enterProduct}>Enter</Button>
+              <Button type="primary" onClick={enterProduct} ghost>
+                Enter
+              </Button>
               <div style={{ padding: 10 }}>
                 <Table
                   size="small"
@@ -160,18 +214,52 @@ const CartForm = () => {
                   dataSource={cartItem}
                   rowKey="_id"
                 ></Table>
+                {contextHolder}
               </div>
             </Col>
-            <Col flex={1}>
-              <div
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <p>ddd</p>
-              </div>
-            </Col>
+            <Card style={{ borderRadius: "20px" }}>
+              <Col flex={1}>
+                <div
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>Subtotal</Text>
+                  <Statistic value={totalAmtCart} precision={2} />
+                  <Divider />
+                  <Text>Customer</Text>
+                  <br></br>
+                  <Select
+                    showSearch
+                    style={{ width: 150 }}
+                    placeholder="Search to Select"
+                    filterOption={(input, option) => {
+                      return (
+                        option.value?.toLowerCase().indexOf(input.toLowerCase()) >=
+                          0 ||
+                        option.label?.toLowerCase().indexOf(input.toLowerCase()) >=
+                          0
+                      );
+                    }}
+                    onSelect={handleProductSelect}
+                    options={contactOptions}
+                  ></Select>
+                  <Divider />
+                  <Text>Payment Method</Text>
+                  <br></br>
+                  <Select
+                    showSearch
+                    style={{ width: 150 }}
+                    placeholder="Search to Select"
+                  ></Select>
+                  <Divider />
+                  <Button type="primary" style={{ width: 150 }}>
+                    Checkout
+                  </Button>
+                </div>
+              </Col>
+            </Card>
           </Row>
           <div style={{ padding: 10 }}></div>
         </div>

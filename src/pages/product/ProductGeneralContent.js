@@ -27,7 +27,6 @@ const ProductGeneralContent = () => {
   const getFields = () => {
     const count = 10
     const children = [];
-    console.log("xxxpro", product)
     let productKeys = Object.keys(product)
     productKeys.map((fieldName, index) => {
       children.push(

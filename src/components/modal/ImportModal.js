@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { importFile } from '../../data/product.api';
 
-const ImportModal = ({ isModalVisible, modal, setVisible, getProducts }) => {
+const ImportModal = ({ isModalVisible, modal, setVisible }) => {
   const [csvFile, setCsvFile] = useState("");
   const [key, setKey] = useState("")
   const [modalText, setModalText] = useState("Import " + modal);
@@ -19,7 +19,6 @@ const ImportModal = ({ isModalVisible, modal, setVisible, getProducts }) => {
     setKey(Date.now())
     setVisible(false)
     setShowProgress(false)
-    getProducts()
   }
 
   const handleCancel = () => {

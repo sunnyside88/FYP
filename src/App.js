@@ -15,6 +15,7 @@ import Listing from "./pages/product/ProductListing.js";
 import ProductForm from "./pages/product/ProductForm.js";
 import CartForm from "./pages/pos/CartForm"
 import UomList from "./pages/others/UomList.js";
+import ContactListing from "./pages/contacts/ContactListing.js";
 
 const App = () =>{
   const dispatch = useDispatch()
@@ -42,6 +43,7 @@ const App = () =>{
         <Route exact path='/' component={Home}/>
         <Route exact path='/pos' component={CartForm}/>
         <Route exact path='/others/uom' component={UomList}/>
+        <Route exact path='/others/contacts' component={ContactListing}/>
         <Route exact path='/products' component={Listing}/>
         <Route exact path='/products/:id' component={ProductForm}/>
         <Route exact path='/login' component={Login}/>

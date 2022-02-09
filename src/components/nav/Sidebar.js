@@ -80,6 +80,10 @@ const SideBar = () => {
                 title: 'Uom',
                 itemId: '/others/uom',
               },
+              {
+                title: 'Contacts',
+                itemId: '/others/contacts',
+              },
             ],
           },
         ]}
