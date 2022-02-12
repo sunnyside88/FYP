@@ -44,7 +44,7 @@ const Header = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [user]);
 
   const logout = () => {
     auth.signOut();

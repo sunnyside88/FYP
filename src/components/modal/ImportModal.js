@@ -19,9 +19,11 @@ const ImportModal = ({ isModalVisible, modal, setVisible }) => {
     setKey(Date.now())
     setVisible(false)
     setShowProgress(false)
+    window.location.reload()
   }
 
   const handleCancel = () => {
+    console.log(isModalVisible)
     setKey(Date.now())
     setVisible(false)
     setShowProgress(false)

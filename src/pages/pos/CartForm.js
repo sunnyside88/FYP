@@ -22,12 +22,14 @@ import { useSelector } from "react-redux";
 
 import Sidebar from "../../components/nav/Sidebar";
 import Header from "../../components/nav/Header";
+import CheckoutModal from "../../components/modal/CheckoutModal";
 
 import PosCartColumnSchema from "../../schema/pos/PosCartColumnSchema";
 
 const CartForm = () => {
   const { products } = useSelector((state) => state.products);
-  const [posCartColumnSchema, setPosCartColumnSchema] = useState(PosCartColumnSchema);
+  const [posCartColumnSchema, setPosCartColumnSchema] =
+    useState(PosCartColumnSchema);
   const [productOptions, setProductOptions] = useState([]);
 
   const { contacts } = useSelector((state) => state.contacts);
@@ -38,7 +40,8 @@ const CartForm = () => {
   const [totalAmtCart, setTotalAmtCart] = useState(0);
 
   const [modal, contextHolder] = Modal.useModal();
-
+  const [visibleCheckout, setVisibleCheckout] = useState(false);
+  const [checkoutFormData, setCheckoutFormData] = useState({});
   const { Text } = Typography;
 
   useEffect(() => {
@@ -52,7 +55,7 @@ const CartForm = () => {
       });
       setProductOptions(arr);
     }
-    if(contacts.length>0){
+    if (contacts.length > 0) {
       let arr = [];
       contacts[0].contacts.map((con) => {
         arr.push({
@@ -60,10 +63,22 @@ const CartForm = () => {
           label: `[${con.code}] ${con.name}`,
         });
       });
-      setContactOptions(arr)
+      setContactOptions(arr);
     }
     renderSchema();
-  }, [products, contacts,cartItem]);
+  }, [products, contacts, cartItem]);
+
+  const showCheckout = () => {
+    if (cartItem.length < 1) {
+      toast.error("Please add cart before proceed!");
+      return;
+    } else {
+      setCheckoutFormData({
+        "totalAmtCart": totalAmtCart,
+      });
+      setVisibleCheckout(true);
+    }
+  };
 
   const onChangeQty = (value, record) => {
     let totalAmt = value * record.price;
@@ -89,8 +104,11 @@ const CartForm = () => {
 
   async function deleteCartItem(id) {
     let lines = JSON.parse(JSON.stringify(cartItem));
-    let filteredLine = lines.filter(function(el) { return el._id != id; })
-    setCartItem(filteredLine)
+    let filteredLine = lines.filter(function (el) {
+      return el._id != id;
+    });
+    setCartItem(filteredLine);
+    onChangeTotalAmtCart(filteredLine);
   }
 
   async function renderSchema() {
@@ -125,7 +143,9 @@ const CartForm = () => {
             };
             modal.confirm(deleteConfig);
           }}
-        ><MinusCircleOutlined style={{ color: "red" }} /></a>
+        >
+          <MinusCircleOutlined style={{ color: "red" }} />
+        </a>
       </Space>
     );
     setPosCartColumnSchema(posCartColumnSchema);
@@ -236,10 +256,12 @@ const CartForm = () => {
                     placeholder="Search to Select"
                     filterOption={(input, option) => {
                       return (
-                        option.value?.toLowerCase().indexOf(input.toLowerCase()) >=
-                          0 ||
-                        option.label?.toLowerCase().indexOf(input.toLowerCase()) >=
-                          0
+                        option.value
+                          ?.toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0 ||
+                        option.label
+                          ?.toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
                       );
                     }}
                     onSelect={handleProductSelect}
@@ -254,8 +276,17 @@ const CartForm = () => {
                     placeholder="Search to Select"
                   ></Select>
                   <Divider />
-                  <Button type="primary" style={{ width: 150 }}>
+                  <Button
+                    onClick={showCheckout}
+                    type="primary"
+                    style={{ width: 150 }}
+                  >
                     Checkout
+                    <CheckoutModal
+                      isModalVisible={visibleCheckout}
+                      setVisible={setVisibleCheckout}
+                      formData={checkoutFormData}
+                    ></CheckoutModal>
                   </Button>
                 </div>
               </Col>
