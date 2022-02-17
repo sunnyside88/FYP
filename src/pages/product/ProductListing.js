@@ -75,7 +75,7 @@ const Listing = () => {
               ),
               onOk: async () => {
                 await deleteProduct(record._id);
-                window.location.reload()
+                window.location.reload();
               },
             };
             modal.confirm(deleteConfig);
@@ -91,8 +91,8 @@ const Listing = () => {
   const onSearch = (value) => console.log(value);
 
   useEffect(() => {
-    if(products.length>0){
-        setFormattedProduct(products[0].products)
+    if (products.length > 0) {
+      setFormattedProduct(products[0].products);
     }
     renderSchema();
   }, [products]);
@@ -139,7 +139,15 @@ const Listing = () => {
           </div>
 
           <div style={{ padding: 10 }}>
-            <Table dataSource={formattedProduct} columns={productColumnSchema}></Table>
+            <Table  
+              dataSource={formattedProduct}
+              columns={productColumnSchema}
+              pagination={{
+                defaultPageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "20", "30"],
+              }}
+            ></Table>
             {contextHolder}
           </div>
         </div>

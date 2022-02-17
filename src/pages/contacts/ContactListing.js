@@ -89,7 +89,7 @@ const ContactListing = () => {
 
   useEffect(() => {
     renderSchema();
-    if (contacts.length>0) {
+    if (contacts.length > 0) {
       setFormattedContact(contacts[0].contacts);
     }
   }, [contacts]);
@@ -140,6 +140,11 @@ const ContactListing = () => {
             <Table
               dataSource={formattedContact}
               columns={contactColumnSchema}
+              pagination={{
+                defaultPageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "20", "30"],
+              }}
             ></Table>
             {contextHolder}
           </div>

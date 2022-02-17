@@ -39,6 +39,8 @@ const CartForm = () => {
   const [cartItem, setCartItem] = useState([]);
   const [totalAmtCart, setTotalAmtCart] = useState(0);
 
+  const [customer, setCustomer] = useState("");
+
   const [modal, contextHolder] = Modal.useModal();
   const [visibleCheckout, setVisibleCheckout] = useState(false);
   const [checkoutFormData, setCheckoutFormData] = useState({});
@@ -72,9 +74,15 @@ const CartForm = () => {
     if (cartItem.length < 1) {
       toast.error("Please add cart before proceed!");
       return;
-    } else {
+    }
+    else if (!customer){
+      toast.error("Please choose customer!");
+      return;
+    }
+    else {
       setCheckoutFormData({
         "totalAmtCart": totalAmtCart,
+        "customerId" : customer,
       });
       setVisibleCheckout(true);
     }
@@ -154,6 +162,10 @@ const CartForm = () => {
   const handleProductSelect = (value) => {
     setEnteredItemId(value);
   };
+
+  const handleContactSelect = (value) =>{
+    setCustomer(value)
+  }
 
   const enterProduct = () => {
     let lines = JSON.parse(JSON.stringify(cartItem));
@@ -264,7 +276,7 @@ const CartForm = () => {
                           .indexOf(input.toLowerCase()) >= 0
                       );
                     }}
-                    onSelect={handleProductSelect}
+                    onSelect={handleContactSelect}
                     options={contactOptions}
                   ></Select>
                   <Divider />
