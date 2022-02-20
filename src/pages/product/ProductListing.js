@@ -88,7 +88,17 @@ const Listing = () => {
     setProductColumnSchema(productColumnSchema);
   }
 
-  const onSearch = (value) => console.log(value);
+  const onChangeSearch = (e) =>{
+    e.preventDefault()
+    let input = e.target.value.toLowerCase()
+    let lines = JSON.parse(JSON.stringify(products[0].products));
+    const searchResult = lines.filter((data)=>{
+      return Object.keys(data).some((key)=>{
+        return JSON.stringify(data[key]).toLowerCase().trim().includes(input)
+      })
+    })
+    setFormattedProduct(searchResult)  
+  }
 
   useEffect(() => {
     if (products.length > 0) {
@@ -128,13 +138,10 @@ const Listing = () => {
               {" "}
               Import{" "}
             </Button>
-            <Search
-              placeholder="input search text"
-              allowClear
-              enterButton="Search"
-              size="medium"
-              style={{ marginTop: 10 }}
-              onSearch={onSearch}
+            <Input
+            placeholder="input search text"
+            style={{ marginTop: 10 }}
+            onChange={onChangeSearch}
             />
           </div>
 

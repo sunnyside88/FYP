@@ -71,6 +71,7 @@ const CartForm = () => {
   }, [products, contacts, cartItem]);
 
   const showCheckout = () => {
+    console.log(cartItem,"xxxxccc")
     if (cartItem.length < 1) {
       toast.error("Please add cart before proceed!");
       return;
@@ -80,9 +81,27 @@ const CartForm = () => {
       return;
     }
     else {
+      let temp = []
+      cartItem.map(x=>{
+        let line = {
+          product_id:x._id,
+          qty:x.qty,
+          price:x.price,
+          uom:"",
+          line_tota:x.qty * x.price
+        }
+        temp.push(line)
+      })
       setCheckoutFormData({
-        "totalAmtCart": totalAmtCart,
-        "customerId" : customer,
+        totalAmtCart: totalAmtCart,
+        customerId : customer,
+        data:{
+          customer_id:customer,
+          stock_pick_id:0, //tbc
+          cart:temp,
+          cart_total:totalAmtCart,
+          status:"PAID",
+        }
       });
       setVisibleCheckout(true);
     }

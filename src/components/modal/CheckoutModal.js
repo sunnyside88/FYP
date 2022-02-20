@@ -8,12 +8,14 @@ import {
   InputNumber,
   Typography,
 } from "antd";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
   const { Header, Footer, Sider, Content } = Layout;
-  const [confirmLoading, setConfirmLoading]= useState(false)
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const { contacts } = useSelector((state) => state.contacts);
   const [paidAmt, setPaidAmt] = useState(0);
   const [returnAmt, setReturnAmt] = useState(0);
@@ -30,14 +32,13 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
 
   const handleCancel = (e) => {
     e.stopPropagation();
-    setConfirmLoading(true);
     setVisible(false);
   };
 
-  const handleOk = (e) => {
+  const handleOk = async (e) => {
     e.stopPropagation();
-    
-    setVisible(false);
+    setConfirmLoading(true);
+    await createInvoice();
   };
 
   const numberFormatter = (val) => {
@@ -45,9 +46,24 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
   };
 
   const findCustomerName = () => {
-    console.log(formData.customerId)
+    console.log(formData.customerId);
     const con = contacts[0].contacts.find((x) => x._id == formData.customerId);
     setCustomerName(con.name);
+  };
+
+  const createInvoice = async () => {
+    axios
+      .post("http://localhost:8000/api/invoices/insertOne", {
+        data: formData.data,
+      })
+      .then((res) => {
+        console.log(`statusCode: ${res.status}`);
+        if (res.status == 200) {
+          setConfirmLoading(false);
+          setVisible(false);
+          toast.success("Transaction recorded!")
+        }
+      });
   };
 
   const renderAmtSuggestion = () => {
@@ -147,6 +163,7 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
         onCancel={handleCancel}
         closable={false}
         width={500}
+        confirmLoading={confirmLoading}
         okText="Complete Payment"
       >
         <Layout>

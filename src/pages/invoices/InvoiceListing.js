@@ -14,7 +14,7 @@ import Header from "../../components/nav/Header";
 import ContactSchema from "../../schema/contacts/ContactColumnSchema";
 import ImportModal from "../../components/modal/ImportModal";
 
-const ContactListing = () => {
+const InvoiceListing = () => {
   const { contacts } = useSelector((state) => state.contacts);
 
   const [formattedContact, setFormattedContact] = useState([]);
@@ -85,17 +85,8 @@ const ContactListing = () => {
     setContactColumnSchema(contactColumnSchema);
   }
 
-  const onChangeSearch = (e) =>{
-    e.preventDefault()
-    let input = e.target.value.toLowerCase()
-    let lines = JSON.parse(JSON.stringify(contacts[0].contacts));
-    const searchResult = lines.filter((data)=>{
-      return Object.keys(data).some((key)=>{
-        return JSON.stringify(data[key]).toLowerCase().trim().includes(input)
-      })
-    })
-    setFormattedContact(searchResult)  
-  }
+  const onSearch = (value) => console.log(value);
+
   useEffect(() => {
     renderSchema();
     if (contacts.length > 0) {
@@ -115,30 +106,14 @@ const ContactListing = () => {
         <div className="col">
           <Header></Header>
           <div className="col-4">
-            <ImportModal
-              modal="Product"
-              onCancel={handleImportCancel}
-              isModalVisible={visibleImport}
-              setVisible={setVisibleImport}
-            ></ImportModal>
-            <h3 style={{ marginTop: 10 }}>Contacts Listing</h3>
-            <Button style={{ marginRight: 10 }} type="primary" shape="round">
-              {" "}
-              New Contact{" "}
-            </Button>
-            <Button
-              onClick={showImport}
-              style={{ marginRight: 10 }}
-              type="primary"
-              shape="round"
-            >
-              {" "}
-              Import{" "}
-            </Button>
-            <Input
-            placeholder="input search text"
-            style={{ marginTop: 10 }}
-            onChange={onChangeSearch}
+            <h3 style={{ marginTop: 10 }}>Invoice Listing</h3>
+            <Search
+              placeholder="input search text"
+              allowClear
+              enterButton="Search"
+              size="medium"
+              style={{ marginTop: 10 }}
+              onSearch={onSearch}
             />
           </div>
 
@@ -160,4 +135,4 @@ const ContactListing = () => {
   );
 };
 
-export default ContactListing;
+export default InvoiceListing;

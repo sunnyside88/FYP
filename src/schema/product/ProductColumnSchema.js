@@ -15,9 +15,9 @@ export default [
       key: 'price',
     },
     {
-      title: 'Default Uom',
-      dataIndex: 'uom_id',
-      key: 'uom_id',
+      title: 'Uom',
+      dataIndex: 'uom',
+      key: 'uom',
     },
     {
       title: 'Product Category',
