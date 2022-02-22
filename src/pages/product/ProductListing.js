@@ -139,7 +139,7 @@ const Listing = () => {
               Import{" "}
             </Button>
             <Input
-            placeholder="input search text"
+            placeholder="Global search"
             style={{ marginTop: 10 }}
             onChange={onChangeSearch}
             />

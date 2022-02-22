@@ -19,8 +19,8 @@ export default [
     },
     {
       title: 'Uom',
-      dataIndex: 'uom_id',
-      key: 'uom_id',
+      dataIndex: 'uom',
+      key: 'uom',
       width: '50px',
     },
     {

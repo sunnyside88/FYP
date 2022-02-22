@@ -13,17 +13,14 @@ export default [
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
+      render:((value)=>value.toFixed(2))
     },
     {
       title: 'Uom',
       dataIndex: 'uom',
       key: 'uom',
     },
-    {
-      title: 'Product Category',
-      dataIndex: 'prod_categ',
-      key: 'prod_categ',
-    },
+    
     {
       title: 'Action',
       key: 'action',

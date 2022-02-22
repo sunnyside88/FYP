@@ -11,14 +11,14 @@ import { useSelector } from "react-redux";
 
 import Sidebar from "../../components/nav/Sidebar";
 import Header from "../../components/nav/Header";
-import ContactSchema from "../../schema/contacts/ContactColumnSchema";
-import ImportModal from "../../components/modal/ImportModal";
+import InvoiceSchema from "../../schema/invoices/InvoiceColumnSchema"
 
 const InvoiceListing = () => {
+  const { invoices } = useSelector((state) => state.invoices);
   const { contacts } = useSelector((state) => state.contacts);
 
-  const [formattedContact, setFormattedContact] = useState([]);
-  const [contactColumnSchema, setContactColumnSchema] = useState(ContactSchema);
+  const [formattedInvoice, setFormattedInvoice] = useState([]);
+  const [invoiceColumnSchema, setInvoiceColumnSchema] = useState(InvoiceSchema);
   const [showListing, setShowListing] = useState(true);
   const [visibleImport, setVisibleImport] = useState(false);
 
@@ -47,8 +47,20 @@ const InvoiceListing = () => {
       });
   }
 
+  const onChangeSearch = (e) => {
+    e.preventDefault()
+    let input = e.target.value.toLowerCase()
+    let lines = JSON.parse(JSON.stringify(invoices[0].invoices));
+    const searchResult = lines.filter((data) => {
+      return Object.keys(data).some((key) => {
+        return JSON.stringify(data[key]).toLowerCase().trim().includes(input)
+      })
+    })
+    setFormattedInvoice(searchResult)
+  }
+
   async function renderSchema() {
-    contactColumnSchema.at(-1).render = (text, record) => (
+    invoiceColumnSchema.at(-1).render = (text, record) => (
       <Space size="middle">
         <a
           onClick={() => {
@@ -73,7 +85,7 @@ const InvoiceListing = () => {
                   <p>Are you sure you want to delete this?</p>
                 </>
               ),
-              onOk: async () => {},
+              onOk: async () => { },
             };
             modal.confirm(deleteConfig);
           }}
@@ -82,17 +94,23 @@ const InvoiceListing = () => {
         </a>
       </Space>
     );
-    setContactColumnSchema(contactColumnSchema);
+    InvoiceSchema.filter(obj=>{
+      if(obj.title==="Contact"){
+        obj.render = ((value)=>"xx")
+        return
+      }
+    })
+    setInvoiceColumnSchema(invoiceColumnSchema);
   }
 
   const onSearch = (value) => console.log(value);
 
   useEffect(() => {
     renderSchema();
-    if (contacts.length > 0) {
-      setFormattedContact(contacts[0].contacts);
+    if (invoices.length > 0) {
+      setFormattedInvoice(invoices[0].invoices);
     }
-  }, [contacts]);
+  }, [invoices]);
 
   //styling
   const { Search } = Input;
@@ -107,20 +125,17 @@ const InvoiceListing = () => {
           <Header></Header>
           <div className="col-4">
             <h3 style={{ marginTop: 10 }}>Invoice Listing</h3>
-            <Search
-              placeholder="input search text"
-              allowClear
-              enterButton="Search"
-              size="medium"
+            <Input
+              placeholder="Global search"
               style={{ marginTop: 10 }}
-              onSearch={onSearch}
+              onChange={onChangeSearch}
             />
           </div>
 
           <div style={{ padding: 10 }}>
             <Table
-              dataSource={formattedContact}
-              columns={contactColumnSchema}
+              dataSource={formattedInvoice}
+              columns={invoiceColumnSchema}
               pagination={{
                 defaultPageSize: 10,
                 showSizeChanger: true,

@@ -27,6 +27,7 @@ const Header = () => {
     console.log(user, "user");
     getProducts();
     getContacts();
+    getInvoices();
     if (!user) {
       //history.push('/login')
       return;
@@ -85,6 +86,23 @@ const Header = () => {
           type: "REFRESH_CONTACT_LIST",
           payload: {
             contacts: data,
+          },
+        });
+      });
+  }
+
+  async function getInvoices() {
+    axios
+      .get("http://localhost:8000/api/invoices", { crossdomain: true })
+      .then((res) => {
+        let data = res.data;
+        data.forEach(function (element, index) {
+          Object.assign(element, { key: index });
+        });
+        dispatch({
+          type: "REFRESH_INVOICE_LIST",
+          payload: {
+            invoices: data,
           },
         });
       });
