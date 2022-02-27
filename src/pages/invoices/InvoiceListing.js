@@ -4,7 +4,7 @@ import "antd/dist/antd.css";
 
 import axios from "axios";
 
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState, createContext, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { useSelector } from "react-redux";
@@ -18,6 +18,7 @@ const InvoiceListing = () => {
   const { contacts } = useSelector((state) => state.contacts);
 
   const [formattedInvoice, setFormattedInvoice] = useState([]);
+  const [invoiceForSearch, setInvoiceForSearch] = useState([]);
   const [invoiceColumnSchema, setInvoiceColumnSchema] = useState(InvoiceSchema);
   const [showListing, setShowListing] = useState(true);
   const [visibleImport, setVisibleImport] = useState(false);
@@ -50,7 +51,7 @@ const InvoiceListing = () => {
   const onChangeSearch = (e) => {
     e.preventDefault()
     let input = e.target.value.toLowerCase()
-    let lines = JSON.parse(JSON.stringify(invoices[0].invoices));
+    let lines = JSON.parse(JSON.stringify(invoiceForSearch));
     const searchResult = lines.filter((data) => {
       return Object.keys(data).some((key) => {
         return JSON.stringify(data[key]).toLowerCase().trim().includes(input)
@@ -64,17 +65,10 @@ const InvoiceListing = () => {
       <Space size="middle">
         <a
           onClick={() => {
-            console.log("record", record);
+            history.push(`/sales/invoices/${record._id}`);
           }}
         >
           <EyeOutlined />
-        </a>
-        <a
-          onClick={() => {
-            history.push(`/products/${record._id}`);
-          }}
-        >
-          <EditOutlined />
         </a>
         <a
           onClick={() => {
@@ -94,23 +88,26 @@ const InvoiceListing = () => {
         </a>
       </Space>
     );
-    InvoiceSchema.filter(obj=>{
-      if(obj.title==="Contact"){
-        obj.render = ((value)=>"xx")
-        return
-      }
-    })
+
     setInvoiceColumnSchema(invoiceColumnSchema);
   }
 
-  const onSearch = (value) => console.log(value);
 
   useEffect(() => {
     renderSchema();
-    if (invoices.length > 0) {
-      setFormattedInvoice(invoices[0].invoices);
+    if (invoices.length > 0 && contacts.length > 0) {
+      let lines = JSON.parse(JSON.stringify(invoices[0].invoices));
+      lines.forEach( element => {
+        let con = contacts[0].contacts.find((x) => x._id == element.customer_id).name
+        if (con) {
+          element["customer_id"] = con
+          element["cart_total"] = element.cart_total.toFixed(2)
+        }
+      });
+      setFormattedInvoice(lines);
+      setInvoiceForSearch(lines)
     }
-  }, [invoices]);
+  }, [invoices,contacts]);
 
   //styling
   const { Search } = Input;

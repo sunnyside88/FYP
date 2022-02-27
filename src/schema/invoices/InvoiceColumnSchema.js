@@ -20,7 +20,6 @@ export default [
       title: 'Paid Amount',
       dataIndex: 'cart_total',
       key: 'cart_total',
-      render:((value)=>value.toFixed(2))
     },
     {
         title: 'Status',
