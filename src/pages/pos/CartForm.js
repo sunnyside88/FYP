@@ -28,6 +28,7 @@ import PosCartColumnSchema from "../../schema/pos/PosCartColumnSchema";
 
 const CartForm = () => {
   const { products } = useSelector((state) => state.products);
+  let { user } = useSelector((state) => ({ ...state }));
   const [posCartColumnSchema, setPosCartColumnSchema] =
     useState(PosCartColumnSchema);
   const [productOptions, setProductOptions] = useState([]);
@@ -85,10 +86,12 @@ const CartForm = () => {
       cartItem.map(x=>{
         let line = {
           product_id:x._id,
+          product_name:x.name,
+          product_code:x.code,
           qty:x.qty,
           price:x.price,
-          uom:"",
-          line_tota:x.qty * x.price
+          uom:x.uom,
+          line_total:x.qty * x.price
         }
         temp.push(line)
       })
@@ -101,6 +104,7 @@ const CartForm = () => {
           cart:temp,
           cart_total:totalAmtCart,
           status:"PAID",
+          createdBy:user.email.substring(0, user.email.indexOf("@")),
         }
       });
       setVisibleCheckout(true);
