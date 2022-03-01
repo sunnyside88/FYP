@@ -23,7 +23,6 @@ const ImportModal = ({ isModalVisible, modal, setVisible }) => {
   }
 
   const handleCancel = () => {
-    console.log(isModalVisible)
     setKey(Date.now())
     setVisible(false)
     setShowProgress(false)

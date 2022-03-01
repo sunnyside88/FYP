@@ -121,7 +121,7 @@ const ContactListing = () => {
               isModalVisible={visibleImport}
               setVisible={setVisibleImport}
             ></ImportModal>
-            <h3 style={{ marginTop: 10 }}>Contacts Listing</h3>
+            <h3 style={{ marginTop: 10 }}>Contacts</h3>
             <Button style={{ marginRight: 10 }} type="primary" shape="round">
               {" "}
               New Contact{" "}

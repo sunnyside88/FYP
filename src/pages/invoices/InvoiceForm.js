@@ -43,7 +43,6 @@ const InvoiceForm = () => {
   }
 
   const getFields = () => {
-    const count = 10;
     const children = [];
     let invoiceKeys = Object.keys(invoice);
     invoiceKeys.map((key, index) => {

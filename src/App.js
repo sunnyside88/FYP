@@ -15,7 +15,7 @@ import Listing from "./pages/product/ProductListing.js";
 import ProductForm from "./pages/product/ProductForm.js";
 import InvoiceForm from "./pages/invoices/InvoiceForm.js"
 import CartForm from "./pages/pos/CartForm"
-import UomList from "./pages/others/UomList.js";
+import PayMethodList from "./pages/others/PayMethodList.js";
 import ContactListing from "./pages/contacts/ContactListing.js";
 import InvoiceListing from "./pages/invoices/InvoiceListing.js";
 
@@ -46,7 +46,7 @@ const App = () =>{
         <Route exact path='/sales/pos' component={CartForm}/>
         <Route exact path='/sales/invoices' component={InvoiceListing}/>
         <Route exact path='/sales/invoices/:id' component={InvoiceForm}/>
-        <Route exact path='/others/uom' component={UomList}/>
+        <Route exact path='/others/pay_methods' component={PayMethodList}/>
         <Route exact path='/others/contacts' component={ContactListing}/>
         <Route exact path='/products' component={Listing}/>
         <Route exact path='/products/:id' component={ProductForm}/>

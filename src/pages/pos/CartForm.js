@@ -36,11 +36,15 @@ const CartForm = () => {
   const { contacts } = useSelector((state) => state.contacts);
   const [contactOptions, setContactOptions] = useState([]);
 
+  const { payMethods } = useSelector((state) => state.payMethods);
+  const [payMethodOptions, setPayMethodOptions] = useState([]);
+
   const [enteredItemId, setEnteredItemId] = useState("");
   const [cartItem, setCartItem] = useState([]);
   const [totalAmtCart, setTotalAmtCart] = useState(0);
 
   const [customer, setCustomer] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
 
   const [modal, contextHolder] = Modal.useModal();
   const [visibleCheckout, setVisibleCheckout] = useState(false);
@@ -68,44 +72,56 @@ const CartForm = () => {
       });
       setContactOptions(arr);
     }
+
+    if (payMethods.length > 0) {
+      let arr = [];
+      payMethods[0].payMethods.map((con) => {
+        arr.push({
+          value: con._id,
+          label: `${con.name}`,
+        });
+      });
+      setPayMethodOptions(arr);
+    }
     renderSchema();
-  }, [products, contacts, cartItem]);
+  }, [products, contacts, cartItem, payMethods]);
 
   const showCheckout = () => {
-    console.log(cartItem,"xxxxccc")
     if (cartItem.length < 1) {
       toast.error("Please add cart before proceed!");
       return;
-    }
-    else if (!customer){
+    } else if (!customer) {
       toast.error("Please choose customer!");
       return;
-    }
-    else {
-      let temp = []
-      cartItem.map(x=>{
+    } else if (!paymentMethod) {
+      toast.error("Pleas choose payment method!");
+      return;
+    } else {
+      let temp = [];
+      cartItem.map((x) => {
         let line = {
-          product_id:x._id,
-          product_name:x.name,
-          product_code:x.code,
-          qty:x.qty,
-          price:x.price,
-          uom:x.uom,
-          line_total:x.qty * x.price
-        }
-        temp.push(line)
-      })
+          product_id: x._id,
+          product_name: x.name,
+          product_code: x.code,
+          qty: x.qty,
+          price: x.price,
+          uom: x.uom,
+          line_total: x.qty * x.price,
+        };
+        temp.push(line);
+      });
       setCheckoutFormData({
         totalAmtCart: totalAmtCart,
-        customerId : customer,
-        data:{
-          customer_id:customer,
-          stock_pick_id:0, //tbc
-          cart:temp,
-          cart_total:totalAmtCart,
-          status:"PAID",
-          createdBy:user.email.substring(0, user.email.indexOf("@")),
-        }
+        customerId: customer,
+        payMethodId:paymentMethod,
+        data: {
+          customer_id: customer,
+          stock_pick_id: 0, //tbc
+          cart: temp,
+          cart_total: totalAmtCart,
+          status: "PAID",
+          createdBy: user.email.substring(0, user.email.indexOf("@")),
+        },
       });
       setVisibleCheckout(true);
     }
@@ -186,9 +202,13 @@ const CartForm = () => {
     setEnteredItemId(value);
   };
 
-  const handleContactSelect = (value) =>{
-    setCustomer(value)
-  }
+  const handleContactSelect = (value) => {
+    setCustomer(value);
+  };
+
+  const handlePayMethodSelect = (value) => {
+    setPaymentMethod(value);
+  };
 
   const enterProduct = () => {
     let lines = JSON.parse(JSON.stringify(cartItem));
@@ -309,6 +329,18 @@ const CartForm = () => {
                     showSearch
                     style={{ width: 150 }}
                     placeholder="Search to Select"
+                    filterOption={(input, option) => {
+                      return (
+                        option.value
+                          ?.toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0 ||
+                        option.label
+                          ?.toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      );
+                    }}
+                    onSelect={handlePayMethodSelect}
+                    options={payMethodOptions}
                   ></Select>
                   <Divider />
                   <Button

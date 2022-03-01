@@ -17,9 +17,11 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
   const { Header, Footer, Sider, Content } = Layout;
   const [confirmLoading, setConfirmLoading] = useState(false);
   const { contacts } = useSelector((state) => state.contacts);
+  const { payMethods } = useSelector((state) => state.payMethods);
   const [paidAmt, setPaidAmt] = useState(0);
   const [returnAmt, setReturnAmt] = useState(0);
   const [customerName, setCustomerName] = useState("");
+  const [payMethodName, setPayMethodName] = useState("");
   const style = { background: "#0092ff", padding: "8px 0" };
   const { Text, Link } = Typography;
 
@@ -28,7 +30,10 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
     if (contacts.length > 0 && formData.customerId) {
       findCustomerName();
     }
-  }, [formData, contacts]);
+    if (payMethods.length > 0 && formData.payMethodId) {
+      findPayMethodName();
+    }
+  }, [formData, contacts, payMethods]);
 
   const handleCancel = (e) => {
     e.stopPropagation();
@@ -46,9 +51,16 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
   };
 
   const findCustomerName = () => {
-    console.log(formData.customerId);
     const con = contacts[0].contacts.find((x) => x._id == formData.customerId);
     setCustomerName(con.name);
+  };
+
+  const findPayMethodName = () => {
+    console.log(formData.payMethodId,"payIdxxx");
+    const method = payMethods[0].payMethods.find(
+      (x) => x._id == formData.payMethodId
+    );
+    setPayMethodName(method.name);
   };
 
   const createInvoice = async () => {
@@ -61,7 +73,8 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
         if (res.status == 200) {
           setConfirmLoading(false);
           setVisible(false);
-          toast.success("Transaction recorded!")
+          toast.success("Transaction recorded!");
+          window.location.reload();
         }
       });
   };
@@ -190,6 +203,18 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
             }}
           >
             <h6>{customerName}</h6>
+          </Header>
+          <Header
+            style={{
+              backgroundColor: "#C3DBD9",
+              textAlign: "center",
+              height: 40,
+              borderRadius: 10,
+              marginTop: 10,
+              paddingTop: 10,
+            }}
+          >
+            <h6>Paid by: {payMethodName}</h6>
           </Header>
           <Divider></Divider>
           <Content style={{ padding: 10 }}>

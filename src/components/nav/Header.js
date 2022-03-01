@@ -26,6 +26,7 @@ const Header = () => {
   useEffect(() => {
     console.log(user, "user");
     getProducts();
+    getPayMethods()
     getContacts();
     getInvoices();
     if (!user) {
@@ -69,6 +70,23 @@ const Header = () => {
           type: "REFRESH_PRODUCT_LIST",
           payload: {
             products: data,
+          },
+        });
+      });
+  }
+
+  async function getPayMethods() {
+    axios
+      .get("http://localhost:8000/api/payMethods", { crossdomain: true })
+      .then((res) => {
+        let data = res.data;
+        data.forEach(function (element, index) {
+          Object.assign(element, { key: index });
+        });
+        dispatch({
+          type: "REFRESH_PAY_METHOD_LIST",
+          payload: {
+            payMethods: data,
           },
         });
       });

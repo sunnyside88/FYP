@@ -85,8 +85,8 @@ const SideBar = () => {
             itemId: '#',
             subNav: [
               {
-                title: 'Uom',
-                itemId: '/others/uom',
+                title: 'Payment Methods',
+                itemId: '/others/pay_methods',
               },
               {
                 title: 'Contacts',
