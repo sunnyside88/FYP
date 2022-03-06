@@ -106,7 +106,6 @@ const Login = ({ history }) => {
             <Link onClick={handleShow} style={{fontSize:14, marginLeft:250}} to="#">Forgot your password?</Link> 
             <input type="password" value={password} className="form-control" placeholder="Enter password" onChange={(e) => setPassword(e.target.value)} />
           </div>
-          <Link style={{fontSize:14}} to="/register">Don't have an account?</Link>
           <div className="justify-content-center">
             <Button onClick={handleLogIn} style={{ width: "100%", marginBottom:20 }} variant="primary">Sign In
               {isLoading === true ? <Spinner

@@ -24,10 +24,15 @@ import Header from "../../components/nav/Header";
 import HeaderTab from "../../components/nav/HeaderTab";
 import invoiceFields from "../../constant/invoiceFields";
 import InvoiceLineSchema from "../../schema/invoices/InvoiceLineSchema";
+import PaymentColumnSchema from "../../schema/payments/PaymentColumnSchema";
 
 const InvoiceForm = () => {
   const { contacts } = useSelector((state) => state.contacts);
+  const { payments } = useSelector((state) => state.payments);
+
   const [invoice, setInvoice] = useState("");
+  const [payment, setPayment] = useState("");
+
   const [form] = Form.useForm();
   const { Panel } = Collapse;
 
@@ -72,7 +77,11 @@ const InvoiceForm = () => {
 
   useEffect(() => {
     getInvoice();
-  }, []);
+    if(payments.length>0){
+      let pv = payments[0].payments.find((x)=>x.invoice_id == invoice._id)
+      setPayment([pv])
+    }
+  }, [payments]);
 
   return (
     <div className="container-fluid p-0">
@@ -107,7 +116,7 @@ const InvoiceForm = () => {
                 ></Col>
               </Row>
               <Divider></Divider>
-              <Collapse defaultActiveKey={["1"]} onChange={callback}>
+              <Collapse onChange={callback}>
                 <Panel header="Cart Item" key="1">
                   <Table
                     dataSource={invoice.cart}
@@ -116,16 +125,16 @@ const InvoiceForm = () => {
                 </Panel>
               </Collapse>
               <Divider></Divider>
-              <Collapse defaultActiveKey={["2"]} onChange={callback}>
+              <Collapse  onChange={callback}>
                 <Panel header="Payment" key="2">
                   <Table
-                    dataSource={invoice.cart}
-                    columns={InvoiceLineSchema}
+                    dataSource={payment}
+                    columns={PaymentColumnSchema}
                   ></Table>
                 </Panel>
               </Collapse>
               <Divider></Divider>
-              <Collapse defaultActiveKey={["3"]} onChange={callback}>
+              <Collapse onChange={callback}>
                 <Panel header="Goods Issue" key="3">
                   <Table
                     dataSource={invoice.cart}

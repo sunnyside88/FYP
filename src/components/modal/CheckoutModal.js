@@ -43,7 +43,8 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
   const handleOk = async (e) => {
     e.stopPropagation();
     setConfirmLoading(true);
-    await createInvoice();
+    let invoice_id = await createInvoice();
+    let paymeny_id = await createPayment(invoice_id)
   };
 
   const numberFormatter = (val) => {
@@ -56,7 +57,7 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
   };
 
   const findPayMethodName = () => {
-    console.log(formData.payMethodId,"payIdxxx");
+    console.log(formData.payMethodId, "payIdxxx");
     const method = payMethods[0].payMethods.find(
       (x) => x._id == formData.payMethodId
     );
@@ -64,19 +65,25 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
   };
 
   const createInvoice = async () => {
-    axios
-      .post("http://localhost:8000/api/invoices/insertOne", {
-        data: formData.data,
-      })
-      .then((res) => {
-        console.log(`statusCode: ${res.status}`);
-        if (res.status == 200) {
-          setConfirmLoading(false);
-          setVisible(false);
-          toast.success("Transaction recorded!");
-          window.location.reload();
-        }
-      });
+    let res = await axios.post("http://localhost:8000/api/invoices/insertOne", {
+      data: formData.data,
+    });
+    return res.data._id;
+  };
+
+  const createPayment = async (invoice_id) => {
+    let paymentData = formData.paymentData;
+    paymentData["paid_amount"] = paidAmt;
+    paymentData["change_amount"] = returnAmt;
+    paymentData["invoice_id"] = invoice_id;
+    let res = await axios.post("http://localhost:8000/api/payments/insertOne", {
+      data: paymentData,
+    });
+    setConfirmLoading(false);
+    setVisible(false);
+    toast.success("Transaction recorded!");
+    window.location.reload();
+    return res
   };
 
   const renderAmtSuggestion = () => {

@@ -18,6 +18,8 @@ import CartForm from "./pages/pos/CartForm"
 import PayMethodList from "./pages/others/PayMethodList.js";
 import ContactListing from "./pages/contacts/ContactListing.js";
 import InvoiceListing from "./pages/invoices/InvoiceListing.js";
+import PaymentList from "./pages/payments/PaymentList.js";
+import LocationList from "./pages/inventory/LocationList.js";
 
 const App = () =>{
   const dispatch = useDispatch()
@@ -43,8 +45,10 @@ const App = () =>{
     <div>
       <Switch>
         <Route exact path='/' component={Home}/>
+        <Route exact path='/inventory/locations' component={LocationList}/>
         <Route exact path='/sales/pos' component={CartForm}/>
         <Route exact path='/sales/invoices' component={InvoiceListing}/>
+        <Route exact path='/sales/payments' component={PaymentList}/>
         <Route exact path='/sales/invoices/:id' component={InvoiceForm}/>
         <Route exact path='/others/pay_methods' component={PayMethodList}/>
         <Route exact path='/others/contacts' component={ContactListing}/>

@@ -29,6 +29,8 @@ const Header = () => {
     getPayMethods()
     getContacts();
     getInvoices();
+    getPayments()
+    getLocations()
     if (!user) {
       //history.push('/login')
       return;
@@ -70,6 +72,40 @@ const Header = () => {
           type: "REFRESH_PRODUCT_LIST",
           payload: {
             products: data,
+          },
+        });
+      });
+  }
+
+  async function getLocations() {
+    axios
+      .get("http://localhost:8000/api/locations/", { crossdomain: true })
+      .then((res) => {
+        let data = res.data;
+        data.forEach(function (element, index) {
+          Object.assign(element, { key: index });
+        });
+        dispatch({
+          type: "REFRESH_LOCATION_LIST",
+          payload: {
+            locations: data,
+          },
+        });
+      });
+  }
+
+  async function getPayments() {
+    axios
+      .get("http://localhost:8000/api/payments", { crossdomain: true })
+      .then((res) => {
+        let data = res.data;
+        data.forEach(function (element, index) {
+          Object.assign(element, { key: index });
+        });
+        dispatch({
+          type: "REFRESH_PAYMENT_LIST",
+          payload: {
+            payments: data,
           },
         });
       });

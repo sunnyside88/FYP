@@ -35,8 +35,8 @@ const SideBar = () => {
             itemId: '#',
             subNav: [
               {
-                title: 'Warehouses',
-                itemId: '/#',
+                title: 'Stock Locations',
+                itemId: '/inventory/locations',
               },
               {
                 title: 'Goods Receive',
@@ -62,7 +62,7 @@ const SideBar = () => {
               },
               {
                 title: 'Payment',
-                itemId: '/pos',
+                itemId: '/sales/payments',
               },
             ],
           },

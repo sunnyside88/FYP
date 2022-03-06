@@ -122,6 +122,11 @@ const CartForm = () => {
           status: "PAID",
           createdBy: user.email.substring(0, user.email.indexOf("@")),
         },
+        paymentData:{
+          pay_method_id:paymentMethod,
+          total:totalAmtCart,
+          status:"Posted"
+        },
       });
       setVisibleCheckout(true);
     }

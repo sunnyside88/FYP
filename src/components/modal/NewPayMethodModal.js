@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import payMethodFields from "../../constant/payMethodFields";
 
-const NewItemModal = ({
+const NewPayMethodModal = ({
   isModalVisible,
   title,
   editPayMethodId,
@@ -117,4 +117,4 @@ const NewItemModal = ({
   );
 };
 
-export default NewItemModal;
+export default NewPayMethodModal;

@@ -1,5 +1,5 @@
 import { Table, Input, Space, Button, Modal } from "antd";
-import {EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, RiseOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 
 import axios from "axios";
@@ -12,17 +12,19 @@ import { useSelector } from "react-redux";
 import Sidebar from "../../components/nav/Sidebar";
 import Header from "../../components/nav/Header";
 import NewPayMethodModal from "../../components/modal/NewPayMethodModal";
-import PayMethodColumnSchema from "../../schema/payMethods/payMethodColumnSchema";
+import PayMethodColumnSchema from "../../schema/payments/PaymentColumnSchema";
 
-const PayMethodList = () => {
+const PaymentList = () => {
+  const { payments } = useSelector((state) => state.payments);
   const { payMethods } = useSelector((state) => state.payMethods);
-  
-  const [formattedMethods, setFormattedMethods] = useState([]);
+
+  const [formattedPayments, setFormattedPayments] = useState([]);
+  const [paymentForSearch, setPaymentForSearch] = useState([]);
   const [methodColumnSchema, setMethodColumnSchema] = useState(
     PayMethodColumnSchema
   );
   const [modalTitle, setModalTitle] = useState("");
-  const [editPayMethodId, setEditPayMethodId] = useState("")
+  const [editPayMethodId, setEditPayMethodId] = useState("");
   const [visibleNewItemModal, setVisibleNewItemModal] = useState(false);
 
   const [modal, contextHolder] = Modal.useModal();
@@ -57,30 +59,11 @@ const PayMethodList = () => {
         <a
           onClick={() => {
             setModalTitle("Edit Mode");
-            setEditPayMethodId(record._id)
+            setEditPayMethodId(record._id);
             setVisibleNewItemModal(true);
           }}
         >
-          <EditOutlined />
-        </a>
-        <a
-          onClick={() => {
-            const deleteConfig = {
-              title: "Delete Record?",
-              content: (
-                <>
-                  <p>Are you sure you want to delete this?</p>
-                </>
-              ),
-              onOk: async () => {
-                await deleteMethod(record._id);
-                window.location.reload();
-              },
-            };
-            modal.confirm(deleteConfig);
-          }}
-        >
-          <DeleteOutlined />
+          <RiseOutlined />
         </a>
       </Space>
     );
@@ -90,20 +73,32 @@ const PayMethodList = () => {
   const onChangeSearch = (e) => {
     e.preventDefault();
     let input = e.target.value.toLowerCase();
-    let lines = JSON.parse(JSON.stringify(payMethods[0].payMethods));
+    let lines = JSON.parse(JSON.stringify(paymentForSearch));
     const searchResult = lines.filter((data) => {
       return Object.keys(data).some((key) => {
         return JSON.stringify(data[key]).toLowerCase().trim().includes(input);
       });
     });
-    setFormattedMethods(searchResult);
+    setFormattedPayments(searchResult);
   };
+
   useEffect(() => {
     renderSchema();
-    if (payMethods.length > 0) {
-      setFormattedMethods(payMethods[0].payMethods);
+    if (payments.length > 0 && payMethods.length>0) {
+        let lines = JSON.parse(JSON.stringify(payments[0].payments));
+        lines.forEach( element => {
+          let method = payMethods[0].payMethods.find((x) => x._id == element.pay_method_id).name
+          if (method) {
+            element["pay_method_id"] = method
+            element["total"] = element.total.toFixed(2)
+            element["paid_amount"] = element.paid_amount.toFixed(2)
+            element["change_amount"] = element.change_amount.toFixed(2)
+          }
+        });
+        setFormattedPayments(lines);
+        setPaymentForSearch(lines)
     }
-  }, [payMethods]);
+  }, [payments,payMethods]);
 
   //styling
   const { Search } = Input;
@@ -124,16 +119,8 @@ const PayMethodList = () => {
               setVisibleNewItemModal={setVisibleNewItemModal}
               setEditPayMethodId={setEditPayMethodId}
             ></NewPayMethodModal>
-            <h3 style={{ marginTop: 10 }}>Payment Methods</h3>
-            <Button
-              onClick={showImport}
-              style={{ marginRight: 10 }}
-              type="primary"
-              shape="round"
-            >
-              {" "}
-              New{" "}
-            </Button>
+            <h3 style={{ marginTop: 10 }}>Payments</h3>
+
             <Input
               placeholder="input search text"
               style={{ marginTop: 10 }}
@@ -143,7 +130,7 @@ const PayMethodList = () => {
 
           <div style={{ padding: 10 }}>
             <Table
-              dataSource={formattedMethods}
+              dataSource={formattedPayments}
               columns={methodColumnSchema}
               pagination={{
                 defaultPageSize: 10,
@@ -159,4 +146,4 @@ const PayMethodList = () => {
   );
 };
 
-export default PayMethodList;
+export default PaymentList;
