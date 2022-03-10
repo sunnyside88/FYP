@@ -6,6 +6,7 @@ import { invoiceReducer } from "./invoiceReducer";
 import { payMethodReducer } from "./payMethodReducer";
 import { paymentReducer } from "./paymentReducer";
 import { locationReducer } from "./locationReducer";
+import { grReducer } from "./grReducer";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   payMethods: payMethodReducer,
   payments: paymentReducer,
   locations: locationReducer,
+  grs: grReducer,
 });
 
 export default rootReducer;

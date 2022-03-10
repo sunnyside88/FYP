@@ -113,7 +113,7 @@ const CartForm = () => {
       setCheckoutFormData({
         totalAmtCart: totalAmtCart,
         customerId: customer,
-        payMethodId:paymentMethod,
+        payMethodId: paymentMethod,
         data: {
           customer_id: customer,
           stock_pick_id: 0, //tbc
@@ -122,10 +122,10 @@ const CartForm = () => {
           status: "PAID",
           createdBy: user.email.substring(0, user.email.indexOf("@")),
         },
-        paymentData:{
-          pay_method_id:paymentMethod,
-          total:totalAmtCart,
-          status:"Posted"
+        paymentData: {
+          pay_method_id: paymentMethod,
+          total: totalAmtCart,
+          status: "Posted",
         },
       });
       setVisibleCheckout(true);
@@ -133,6 +133,10 @@ const CartForm = () => {
   };
 
   const onChangeQty = (value, record) => {
+    if(value>record.stock_qty){
+      toast.error(`Insufficient stock quantity - ${record.stock_qty}`)
+      return
+    }
     let totalAmt = value * record.price;
     let lines = JSON.parse(JSON.stringify(cartItem));
     lines.filter((x) => {
@@ -221,6 +225,11 @@ const CartForm = () => {
       toast.error("Missing product!");
       return;
     }
+    const pro = products[0].products.find((x) => x._id == enteredItemId);
+    if(pro.stock_qty<1){
+      toast.error(`Insufficient stock quantity - ${pro.stock_qty}`)
+      return
+    }
     if (lines.some((e) => e._id == enteredItemId)) {
       let foundIndex = lines.findIndex((x) => x._id == enteredItemId);
       lines[foundIndex].qty = lines[foundIndex].qty + 1;
@@ -251,7 +260,6 @@ const CartForm = () => {
     },
     getCheckboxProps: (record) => ({
       disabled: record.name === "Disabled User",
-      // Column configuration not to be checked
       name: record.name,
     }),
   };

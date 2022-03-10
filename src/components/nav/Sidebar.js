@@ -40,7 +40,7 @@ const SideBar = () => {
               },
               {
                 title: 'Goods Receive',
-                itemId: '/#',
+                itemId: '/inventory/gr',
               },
               {
                 title: 'Goods Issue',
