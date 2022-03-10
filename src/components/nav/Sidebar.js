@@ -44,7 +44,7 @@ const SideBar = () => {
               },
               {
                 title: 'Goods Issue',
-                itemId: '/#',
+                itemId: '/inventory/gi',
               },
             ],
           },

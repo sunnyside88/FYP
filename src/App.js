@@ -21,6 +21,7 @@ import InvoiceListing from "./pages/invoices/InvoiceListing.js";
 import PaymentList from "./pages/payments/PaymentList.js";
 import LocationList from "./pages/inventory/LocationList.js";
 import GrList from "./pages/inventory/GrList.js";
+import GiList from "./pages/inventory/GiList.js";
 
 const App = () =>{
   const dispatch = useDispatch()
@@ -48,6 +49,7 @@ const App = () =>{
         <Route exact path='/' component={Home}/>
         <Route exact path='/inventory/locations' component={LocationList}/>
         <Route exact path='/inventory/gr' component={GrList}/>
+        <Route exact path='/inventory/gi' component={GiList}/>
         <Route exact path='/sales/pos' component={CartForm}/>
         <Route exact path='/sales/invoices' component={InvoiceListing}/>
         <Route exact path='/sales/payments' component={PaymentList}/>

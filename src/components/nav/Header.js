@@ -26,12 +26,13 @@ const Header = () => {
   useEffect(() => {
     console.log(user, "user");
     getProducts();
-    getGr()
-    getPayMethods()
+    getGr();
+    getGi();
+    getPayMethods();
     getContacts();
     getInvoices();
-    getPayments()
-    getLocations()
+    getPayments();
+    getLocations();
     if (!user) {
       //history.push('/login')
       return;
@@ -73,6 +74,23 @@ const Header = () => {
           type: "REFRESH_PRODUCT_LIST",
           payload: {
             products: data,
+          },
+        });
+      });
+  }
+
+  async function getGi() {
+    axios
+      .get("http://localhost:8000/api/gis", { crossdomain: true })
+      .then((res) => {
+        let data = res.data;
+        data.forEach(function (element, index) {
+          Object.assign(element, { key: index });
+        });
+        dispatch({
+          type: "REFRESH_GI_LIST",
+          payload: {
+            gis: data,
           },
         });
       });

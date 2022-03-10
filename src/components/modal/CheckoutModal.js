@@ -45,6 +45,7 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
     setConfirmLoading(true);
     let invoice_id = await createInvoice();
     let paymeny_id = await createPayment(invoice_id)
+    let gi_id = await createGi(invoice_id)
   };
 
   const numberFormatter = (val) => {
@@ -70,6 +71,25 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
     });
     return res.data._id;
   };
+
+  const createGi = async (invoice_id) =>{
+    let stock_pick_lines = JSON.parse(JSON.stringify(formData.data.cart));
+    stock_pick_lines.forEach(x=>{
+      delete x.price
+    })
+    let gi_data = {
+      invoice_id:invoice_id,
+      from_location:"Main Warehouse",
+      to_location:"Customer",
+      stock_pick_lines:stock_pick_lines,
+      status:"Approved",
+      createdBy:formData.data.createdBy
+    }
+    let res = await axios.post("http://localhost:8000/api/gi/insertOne", {
+      data: gi_data,
+    });
+    return res.data._id;
+  }
 
   const createPayment = async (invoice_id) => {
     let paymentData = formData.paymentData;

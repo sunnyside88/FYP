@@ -15,7 +15,6 @@ import {
 } from "antd";
 import moment from "moment";
 
-
 import "antd/dist/antd.css";
 import axios from "axios";
 
@@ -25,27 +24,22 @@ import HeaderTab from "../../components/nav/HeaderTab";
 import invoiceFields from "../../constant/invoiceFields";
 import InvoiceLineSchema from "../../schema/invoices/InvoiceLineSchema";
 import PaymentColumnSchema from "../../schema/payments/PaymentColumnSchema";
+import GiColumnSchema from "../../schema/inventory/GiColumnSchema";
 
 const InvoiceForm = () => {
   const { contacts } = useSelector((state) => state.contacts);
   const { payments } = useSelector((state) => state.payments);
+  const { gis } = useSelector((state) => state.gis);
 
   const [invoice, setInvoice] = useState("");
-  const [payment, setPayment] = useState("");
+  const [payment, setPayment] = useState([]);
+  const [gi, setGi] = useState([]);
+
 
   const [form] = Form.useForm();
   const { Panel } = Collapse;
 
   const { id } = useParams();
-
-  async function getInvoice() {
-    axios
-      .get("http://localhost:8000/api/invoices/" + id, { crossdomain: true })
-      .then((res) => {
-        let data = res.data;
-        setInvoice(data);
-      });
-  }
 
   const getFields = () => {
     const children = [];
@@ -54,11 +48,16 @@ const InvoiceForm = () => {
       if (invoiceFields[0][key]) {
         children.push(
           <Col span={8} key={index}>
-            <Form.Item
-              name={`${key}`}
-              label={`${invoiceFields[0][key]}`}
-            >
-              <Input disabled={true} defaultValue={`${key=='customer_id'?contacts[0].contacts.find((x) => x._id == invoice[key]).name:invoice[key]}`} />
+            <Form.Item name={`${key}`} label={`${invoiceFields[0][key]}`}>
+              <Input
+                disabled={true}
+                defaultValue={`${
+                  key == "customer_id"
+                    ? contacts[0].contacts.find((x) => x._id == invoice[key])
+                        .name
+                    : invoice[key]
+                }`}
+              />
             </Form.Item>
           </Col>
         );
@@ -71,16 +70,31 @@ const InvoiceForm = () => {
     console.log("Received values of form: ", values);
   };
 
-  function callback(key) {
-    console.log(key);
+  function callbackPayment(key) {
+    if (payments.length > 0) {
+      let pv = payments[0].payments.find((x) => x.invoice_id == invoice._id);
+      setPayment([pv]);
+    }
+  }
+
+  function callbackGI(key) {
+    if (gis.length > 0) {
+      let gi = gis[0].gis.find((x) => x.invoice_id == invoice._id);
+      setGi([gi]);
+    }
   }
 
   useEffect(() => {
+    
+    const getInvoice = async () => {
+      await axios
+        .get("http://localhost:8000/api/invoices/" + id, { crossdomain: true })
+        .then((res) => {
+          let data = res.data;
+          setInvoice(data);
+        });
+    };
     getInvoice();
-    if(payments.length>0){
-      let pv = payments[0].payments.find((x)=>x.invoice_id == invoice._id)
-      setPayment([pv])
-    }
   }, [payments]);
 
   return (
@@ -95,10 +109,14 @@ const InvoiceForm = () => {
             <Space>
               <h2 style={{ marginTop: 10, marginLeft: 10 }}>Invoice</h2>
               <Tag color="purple">Create by: {invoice.createdBy}</Tag>
-              <Tag color="orange">{moment(invoice.createdAt).utc().format("MMMM Do YYYY, h:mm:ss a")}</Tag>
+              <Tag color="orange">
+                {moment(invoice.createdAt)
+                  .utc()
+                  .format("MMMM Do YYYY, h:mm:ss a")}
+              </Tag>
               <Tag color="green">{invoice.status}</Tag>
             </Space>
-            <Divider style={{marginTop:10}}></Divider>
+            <Divider style={{ marginTop: 10 }}></Divider>
             <Form
               form={form}
               name="advanced_search"
@@ -116,7 +134,7 @@ const InvoiceForm = () => {
                 ></Col>
               </Row>
               <Divider></Divider>
-              <Collapse onChange={callback}>
+              <Collapse>
                 <Panel header="Cart Item" key="1">
                   <Table
                     dataSource={invoice.cart}
@@ -125,7 +143,7 @@ const InvoiceForm = () => {
                 </Panel>
               </Collapse>
               <Divider></Divider>
-              <Collapse  onChange={callback}>
+              <Collapse onChange={callbackPayment}>
                 <Panel header="Payment" key="2">
                   <Table
                     dataSource={payment}
@@ -134,11 +152,11 @@ const InvoiceForm = () => {
                 </Panel>
               </Collapse>
               <Divider></Divider>
-              <Collapse onChange={callback}>
+              <Collapse onChange={callbackGI}>
                 <Panel header="Goods Issue" key="3">
                   <Table
-                    dataSource={invoice.cart}
-                    columns={InvoiceLineSchema}
+                    dataSource={gi}
+                    columns={GiColumnSchema}
                   ></Table>
                 </Panel>
               </Collapse>
