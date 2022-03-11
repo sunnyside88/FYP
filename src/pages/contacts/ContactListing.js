@@ -13,14 +13,17 @@ import Sidebar from "../../components/nav/Sidebar";
 import Header from "../../components/nav/Header";
 import ContactSchema from "../../schema/contacts/ContactColumnSchema";
 import ImportModal from "../../components/modal/ImportModal";
+import NewContactModal from "../../components/modal/NewContactModal";
 
 const ContactListing = () => {
   const { contacts } = useSelector((state) => state.contacts);
 
   const [formattedContact, setFormattedContact] = useState([]);
   const [contactColumnSchema, setContactColumnSchema] = useState(ContactSchema);
-  const [showListing, setShowListing] = useState(true);
-  const [visibleImport, setVisibleImport] = useState(false);
+
+  const [modalTitle, setModalTitle] = useState("");
+  const [editContactId, setEditContactId] = useState("");
+  const [visibleNewContactModal, setVisibleContactModal] = useState(false);
 
   const [modal, contextHolder] = Modal.useModal();
   const ReachableContext = createContext();
@@ -29,16 +32,16 @@ const ContactListing = () => {
   const dispatch = useDispatch();
 
   const showImport = () => {
-    setVisibleImport(true);
+    setModalTitle("New Contact");
+    setVisibleContactModal(true);
   };
-
   const handleImportCancel = () => {
-    setVisibleImport(false);
+    setVisibleContactModal(false);
   };
 
-  async function deleteProduct(id) {
+  async function deleteContact(id) {
     axios
-      .post("http://localhost:8000/api/products/deleteOne", {
+      .post("http://localhost:8000/api/contacts/deleteOne", {
         id: id,
       })
       .then((res) => {
@@ -52,14 +55,9 @@ const ContactListing = () => {
       <Space size="middle">
         <a
           onClick={() => {
-            console.log("record", record);
-          }}
-        >
-          <EyeOutlined />
-        </a>
-        <a
-          onClick={() => {
-            history.push(`/products/${record._id}`);
+            setModalTitle("Edit Mode");
+            setEditContactId(record._id);
+            setVisibleContactModal(true);
           }}
         >
           <EditOutlined />
@@ -73,7 +71,10 @@ const ContactListing = () => {
                   <p>Are you sure you want to delete this?</p>
                 </>
               ),
-              onOk: async () => {},
+              onOk: async () => {
+                await deleteContact(record._id);
+                window.location.reload();
+              },
             };
             modal.confirm(deleteConfig);
           }}
@@ -85,17 +86,17 @@ const ContactListing = () => {
     setContactColumnSchema(contactColumnSchema);
   }
 
-  const onChangeSearch = (e) =>{
-    e.preventDefault()
-    let input = e.target.value.toLowerCase()
+  const onChangeSearch = (e) => {
+    e.preventDefault();
+    let input = e.target.value.toLowerCase();
     let lines = JSON.parse(JSON.stringify(contacts[0].contacts));
-    const searchResult = lines.filter((data)=>{
-      return Object.keys(data).some((key)=>{
-        return JSON.stringify(data[key]).toLowerCase().trim().includes(input)
-      })
-    })
-    setFormattedContact(searchResult)  
-  }
+    const searchResult = lines.filter((data) => {
+      return Object.keys(data).some((key) => {
+        return JSON.stringify(data[key]).toLowerCase().trim().includes(input);
+      });
+    });
+    setFormattedContact(searchResult);
+  };
   useEffect(() => {
     renderSchema();
     if (contacts.length > 0) {
@@ -115,17 +116,14 @@ const ContactListing = () => {
         <div className="col">
           <Header></Header>
           <div className="col-4">
-            <ImportModal
-              modal="Product"
-              onCancel={handleImportCancel}
-              isModalVisible={visibleImport}
-              setVisible={setVisibleImport}
-            ></ImportModal>
+            <NewContactModal
+              isModalVisible={visibleNewContactModal}
+              title={modalTitle}
+              editContactId={editContactId}
+              setVisibleNewItemModal={setVisibleContactModal}
+              setEditContactId={setEditContactId}
+            ></NewContactModal>
             <h3 style={{ marginTop: 10 }}>Contacts</h3>
-            <Button style={{ marginRight: 10 }} type="primary" shape="round">
-              {" "}
-              New Contact{" "}
-            </Button>
             <Button
               onClick={showImport}
               style={{ marginRight: 10 }}
@@ -133,12 +131,12 @@ const ContactListing = () => {
               shape="round"
             >
               {" "}
-              Import{" "}
+              New Contact{" "}
             </Button>
             <Input
-            placeholder="input search text"
-            style={{ marginTop: 10 }}
-            onChange={onChangeSearch}
+              placeholder="input search text"
+              style={{ marginTop: 10 }}
+              onChange={onChangeSearch}
             />
           </div>
 

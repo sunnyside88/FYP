@@ -28,7 +28,7 @@ const SideBar = () => {
         items={[
           {
             title: 'Dashboard',
-            itemId: '/dashboard',
+            itemId: '/',
           },
           {
             title: 'Inventory',
