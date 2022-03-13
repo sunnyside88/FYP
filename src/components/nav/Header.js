@@ -33,6 +33,7 @@ const Header = () => {
     getInvoices();
     getPayments();
     getLocations();
+    getPopularItem();
     if (!user) {
       //history.push('/login')
       return;
@@ -74,6 +75,25 @@ const Header = () => {
           type: "REFRESH_PRODUCT_LIST",
           payload: {
             products: data,
+          },
+        });
+      });
+  }
+
+  async function getPopularItem() {
+    axios
+      .get("http://localhost:8000/api/gi/filterPopularItem", {
+        crossdomain: true,
+      })
+      .then((res) => {
+        let data = res.data;
+        data.forEach(function (element, index) {
+          Object.assign(element, { key: index });
+        });
+        dispatch({
+          type: "REFRESH_POPULAR_ITEM",
+          payload: {
+            popularItems: data,
           },
         });
       });

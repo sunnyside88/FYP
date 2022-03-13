@@ -1,8 +1,9 @@
 import { Modal, Form, Col, Input, Row, InputNumber } from "antd";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import payMethodFields from "../../constant/payMethodFields";
+import { useSelector } from "react-redux";
 
 const NewPayMethodModal = ({
   isModalVisible,
@@ -15,20 +16,25 @@ const NewPayMethodModal = ({
   const [formData, setFormData] = useState({});
   const [name, setName] = useState("");
   const [serviceCharge, setServiceCharge] = useState("");
+
+  const { payMethods } = useSelector((state) => state.payMethods);
   useEffect(() => {
+    if (editPayMethodId && payMethods.length>0) {
+      let pm = payMethods[0].payMethods.find((x) => x._id == editPayMethodId);
+    }
     setFormData({
       _id: editPayMethodId ?? null,
       name: name,
       service_charge: serviceCharge,
     });
-  }, [name, serviceCharge]);
+  }, [name, serviceCharge, payMethods]);
 
   const handleOk = async () => {
     if (!name) {
       toast.error("Missing name!");
       return;
     }
-    if (serviceCharge<0) {
+    if (serviceCharge < 0) {
       toast.error("Missing service charge!");
       return;
     }
@@ -55,6 +61,10 @@ const NewPayMethodModal = ({
       });
   };
 
+  const handleOnchangeName = (e) =>{
+    setName(e.target.value)
+  }
+
   const getFields = () => {
     const children = [];
     let payMethodKeys = Object.keys(payMethodFields[0]);
@@ -72,7 +82,7 @@ const NewPayMethodModal = ({
             ]}
           >
             {key == "name" ? (
-              <Input onChange={(e) => setName(e.target.value)}></Input>
+              <Input allowClear={true} onChange={(e)=>handleOnchangeName(e)}></Input>
             ) : (
               <InputNumber
                 onChange={(value) => setServiceCharge(value)}

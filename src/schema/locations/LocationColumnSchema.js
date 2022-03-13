@@ -9,9 +9,4 @@ export default [
     dataIndex: "type",
     key: "type",
   },
-
-  {
-    title: "Action",
-    key: "action",
-  },
 ];

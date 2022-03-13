@@ -13,6 +13,7 @@ import Sidebar from "../../components/nav/Sidebar";
 import Header from "../../components/nav/Header";
 import ProductSchema from "../../schema/product/ProductColumnSchema";
 import ImportModal from "../../components/modal/ImportModal";
+import NewProductModal from "../../components/modal/NewProductModal";
 
 const Listing = () => {
   const { products } = useSelector((state) => state.products);
@@ -20,6 +21,10 @@ const Listing = () => {
   const [productColumnSchema, setProductColumnSchema] = useState(ProductSchema);
   const [showListing, setShowListing] = useState(true);
   const [visibleImport, setVisibleImport] = useState(false);
+
+  const [modalTitle, setModalTitle] = useState("");
+  const [editProductId, setEditProductId] = useState("");
+  const [visibleNewProductModal, setVisibleProductModal] = useState(false);
 
   const [modal, contextHolder] = Modal.useModal();
   const ReachableContext = createContext();
@@ -33,6 +38,11 @@ const Listing = () => {
 
   const handleImportCancel = () => {
     setVisibleImport(false);
+  };
+
+  const showNewProduct = () => {
+    setModalTitle("New Product");
+    setVisibleProductModal(true);
   };
 
   async function deleteProduct(id) {
@@ -51,15 +61,9 @@ const Listing = () => {
       <Space size="middle">
         <a
           onClick={() => {
-            console.log(record, "record");
-            history.push(`/products/${record._id}`);
-          }}
-        >
-          <EyeOutlined />
-        </a>
-        <a
-          onClick={() => {
-            history.push(`/products/${record._id}`);
+            setModalTitle("Edit Mode");
+            setEditProductId(record._id);
+            setVisibleProductModal(true);
           }}
         >
           <EditOutlined />
@@ -88,17 +92,17 @@ const Listing = () => {
     setProductColumnSchema(productColumnSchema);
   }
 
-  const onChangeSearch = (e) =>{
-    e.preventDefault()
-    let input = e.target.value.toLowerCase()
+  const onChangeSearch = (e) => {
+    e.preventDefault();
+    let input = e.target.value.toLowerCase();
     let lines = JSON.parse(JSON.stringify(products[0].products));
-    const searchResult = lines.filter((data)=>{
-      return Object.keys(data).some((key)=>{
-        return JSON.stringify(data[key]).toLowerCase().trim().includes(input)
-      })
-    })
-    setFormattedProduct(searchResult)  
-  }
+    const searchResult = lines.filter((data) => {
+      return Object.keys(data).some((key) => {
+        return JSON.stringify(data[key]).toLowerCase().trim().includes(input);
+      });
+    });
+    setFormattedProduct(searchResult);
+  };
 
   useEffect(() => {
     if (products.length > 0) {
@@ -124,8 +128,15 @@ const Listing = () => {
               isModalVisible={visibleImport}
               setVisible={setVisibleImport}
             ></ImportModal>
+            <NewProductModal
+              isModalVisible={visibleNewProductModal}
+              title={modalTitle}
+              editProductId={editProductId}
+              setVisibleProductModal={setVisibleProductModal}
+              setEditProductId={setEditProductId}
+            ></NewProductModal>
             <h3 style={{ marginTop: 10 }}>Product Listing</h3>
-            <Button style={{ marginRight: 10 }} type="primary" shape="round">
+            <Button onClick={showNewProduct} style={{ marginRight: 10 }} type="primary" shape="round">
               {" "}
               New Product{" "}
             </Button>
@@ -139,14 +150,14 @@ const Listing = () => {
               Import{" "}
             </Button>
             <Input
-            placeholder="Global search"
-            style={{ marginTop: 10 }}
-            onChange={onChangeSearch}
+              placeholder="Global search"
+              style={{ marginTop: 10 }}
+              onChange={onChangeSearch}
             />
           </div>
 
           <div style={{ padding: 10 }}>
-            <Table  
+            <Table
               dataSource={formattedProduct}
               columns={productColumnSchema}
               pagination={{

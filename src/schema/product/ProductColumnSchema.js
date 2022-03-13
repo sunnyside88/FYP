@@ -1,29 +1,55 @@
 export default [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Code",
+    dataIndex: "code",
+    key: "code",
+  },
+  {
+    title: "Price",
+    dataIndex: "price",
+    key: "price",
+    render: (value) => {
+      if (value) {
+        return value.toFixed(2);
+      }
+      else{
+        return "NA"
+      }
     },
-    {
-      title: 'Code',
-      dataIndex: 'code',
-      key: 'code',
+  },
+  {
+    title: "Stock Qty",
+    dataIndex: "stock_qty",
+    key: "stock_qty",
+    render: (value) => {
+      if (!value) {
+        return 0;
+      } else {
+        return value;
+      }
     },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-      render:((value)=>value.toFixed(2))
+  },
+  {
+    title: "Uom",
+    dataIndex: "uom",
+    key: "uom",
+    render: (value) => {
+      if (value) {
+        return value
+      }
+      else{
+        return "NA"
+      }
     },
-    {
-      title: 'Uom',
-      dataIndex: 'uom',
-      key: 'uom',
-    },
-    
-    {
-      title: 'Action',
-      key: 'action',
-    },
-  ];
+  },
 
+  {
+    title: "Action",
+    key: "action",
+  },
+];
