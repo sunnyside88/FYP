@@ -116,22 +116,22 @@ const Header = () => {
       });
   }
 
-  async function getGr() {
-    axios
-      .get("http://localhost:8000/api/grs", { crossdomain: true })
-      .then((res) => {
-        let data = res.data;
-        data.forEach(function (element, index) {
-          Object.assign(element, { key: index });
+    async function getGr() {
+      axios
+        .get("http://localhost:8000/api/grs", { crossdomain: true })
+        .then((res) => {
+          let data = res.data;
+          data.forEach(function (element, index) {
+            Object.assign(element, { key: index });
+          });
+          dispatch({
+            type: "REFRESH_GR_LIST",
+            payload: {
+              grs: data,
+            },
+          });
         });
-        dispatch({
-          type: "REFRESH_GR_LIST",
-          payload: {
-            grs: data,
-          },
-        });
-      });
-  }
+    }
 
   async function getLocations() {
     axios

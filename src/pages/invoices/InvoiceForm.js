@@ -25,11 +25,13 @@ import invoiceFields from "../../constant/invoiceFields";
 import InvoiceLineSchema from "../../schema/invoices/InvoiceLineSchema";
 import PaymentColumnSchema from "../../schema/payments/PaymentColumnSchema";
 import GiColumnSchema from "../../schema/inventory/GiColumnSchema";
+import PaymentLineSchema from "../../schema/payments/PaymentLineSchema";
 
 const InvoiceForm = () => {
   const { contacts } = useSelector((state) => state.contacts);
   const { payments } = useSelector((state) => state.payments);
   const { gis } = useSelector((state) => state.gis);
+  const { payMethods } = useSelector((state) => state.payMethods);
 
   const [invoice, setInvoice] = useState("");
   const [payment, setPayment] = useState([]);
@@ -73,6 +75,8 @@ const InvoiceForm = () => {
   function callbackPayment(key) {
     if (payments.length > 0) {
       let pv = payments[0].payments.find((x) => x.invoice_id == invoice._id);
+      let pm = payMethods[0].payMethods.find((x) => x._id == pv.pay_method_id);
+      pv["pay_method_name"] = pm.name
       setPayment([pv]);
     }
   }
@@ -147,7 +151,7 @@ const InvoiceForm = () => {
                 <Panel header="Payment" key="2">
                   <Table
                     dataSource={payment}
-                    columns={PaymentColumnSchema}
+                    columns={PaymentLineSchema}
                   ></Table>
                 </Panel>
               </Collapse>

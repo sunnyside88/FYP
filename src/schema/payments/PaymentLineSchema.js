@@ -8,8 +8,8 @@ export default [
   },
   {
     title: "Payment Method",
-    dataIndex: "pay_method_id",
-    key: "pay_method_id",
+    dataIndex: "pay_method_name",
+    key: "pay_method_name",
   },
   {
     title: "Cart Total",
@@ -20,11 +20,17 @@ export default [
     title: "Paid Amt",
     dataIndex: "paid_amount",
     key: "paid_amount",
+    render: (value) => {
+      return value.toFixed(2);
+    },
   },
   {
     title: "Change Amt",
     dataIndex: "change_amount",
     key: "change_amount",
+    render: (value) => {
+      return value.toFixed(2);
+    },
   },
 
   {

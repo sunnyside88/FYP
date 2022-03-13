@@ -20,23 +20,7 @@ const LocationList = () => {
   const [locationColumnSchema, setLocationColumnSchema] =
     useState(LocationColumnSchema);
 
-  async function renderSchema() {
-    locationColumnSchema.at(-1).render = (text, record) => (
-      <Space size="middle">
-        <a
-          onClick={() => {
-          
-          }}
-        >
-          <EyeOutlined />
-        </a>
-      </Space>
-    );
-    setLocationColumnSchema(locationColumnSchema);
-  }
-
   useEffect(() => {
-    renderSchema();
     if (locations.length > 0) {
       setFormattedLocations(locations[0].locations);
     }
@@ -67,7 +51,6 @@ const LocationList = () => {
                 pageSizeOptions: ["10", "20", "30"],
               }}
             ></Table>
-            
           </div>
         </div>
       </div>
