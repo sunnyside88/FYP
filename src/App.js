@@ -23,6 +23,8 @@ import LocationList from "./pages/inventory/LocationList.js";
 import GrList from "./pages/inventory/GrList.js";
 import GiList from "./pages/inventory/GiList.js";
 import Dashboard from "./pages/dashboard/Dashboard.js";
+import GrForm from "./pages/inventory/GrForm";
+import GiForm from "./pages/inventory/GiForm.js";
 
 const App = () =>{
   const dispatch = useDispatch()
@@ -50,7 +52,9 @@ const App = () =>{
         <Route exact path='/' component={Dashboard}/>
         <Route exact path='/inventory/locations' component={LocationList}/>
         <Route exact path='/inventory/gr' component={GrList}/>
+        <Route exact path='/inventory/gr/:id' component={GrForm}/>
         <Route exact path='/inventory/gi' component={GiList}/>
+        <Route exact path='/inventory/gi/:id' component={GiForm}/>
         <Route exact path='/sales/pos' component={CartForm}/>
         <Route exact path='/sales/invoices' component={InvoiceListing}/>
         <Route exact path='/sales/payments' component={PaymentList}/>

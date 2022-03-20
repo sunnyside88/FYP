@@ -13,21 +13,20 @@ const NewPayMethodModal = ({
   setEditPayMethodId,
 }) => {
   const [form] = Form.useForm();
-  const [formData, setFormData] = useState({});
   const [name, setName] = useState("");
+  const [pm, setPm] = useState({});
   const [serviceCharge, setServiceCharge] = useState("");
+  const [refreshKey, setKey] = useState("");
 
   const { payMethods } = useSelector((state) => state.payMethods);
   useEffect(() => {
-    if (editPayMethodId && payMethods.length>0) {
+    if (editPayMethodId && payMethods.length > 0) {
       let pm = payMethods[0].payMethods.find((x) => x._id == editPayMethodId);
+      setPm(pm);
+      setName(pm.name);
+      setServiceCharge(pm.service_charge);
     }
-    setFormData({
-      _id: editPayMethodId ?? null,
-      name: name,
-      service_charge: serviceCharge,
-    });
-  }, [name, serviceCharge, payMethods]);
+  }, [payMethods, editPayMethodId]);
 
   const handleOk = async () => {
     if (!name) {
@@ -38,18 +37,26 @@ const NewPayMethodModal = ({
       toast.error("Missing service charge!");
       return;
     }
+    setKey(Date.now());
     await upsertPayMethod();
+    setEditPayMethodId(null)
     setVisibleNewItemModal(false);
   };
 
   const handleCancel = () => {
+    setKey(Date.now());
+    setEditPayMethodId(null)
     setVisibleNewItemModal(false);
   };
 
   const upsertPayMethod = async () => {
     axios
       .post("http://localhost:8000/api/payMethod/upsertOne", {
-        data: formData,
+        data: {
+          _id: editPayMethodId ?? null,
+          name: name,
+          service_charge: serviceCharge,
+        },
       })
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
@@ -61,9 +68,9 @@ const NewPayMethodModal = ({
       });
   };
 
-  const handleOnchangeName = (e) =>{
-    setName(e.target.value)
-  }
+  const handleOnchangeName = (e) => {
+    setName(e.target.value);
+  };
 
   const getFields = () => {
     const children = [];
@@ -82,9 +89,16 @@ const NewPayMethodModal = ({
             ]}
           >
             {key == "name" ? (
-              <Input allowClear={true} onChange={(e)=>handleOnchangeName(e)}></Input>
+              <Input
+                allowClear={true}
+                value={name}
+                key={refreshKey}
+                onChange={(e) => handleOnchangeName(e)}
+              ></Input>
             ) : (
               <InputNumber
+                value={serviceCharge}
+                key={refreshKey}
                 onChange={(value) => setServiceCharge(value)}
                 min={0}
               ></InputNumber>

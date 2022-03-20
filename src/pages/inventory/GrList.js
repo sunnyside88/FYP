@@ -1,5 +1,5 @@
 import { Table, Input, Space, Button, Modal } from "antd";
-import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { EditOutlined, RiseOutlined, EyeOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 
 import axios from "axios";
@@ -18,15 +18,16 @@ const GrList = () => {
   const { grs } = useSelector((state) => state.grs);
 
   const [formattedGrs, setFormattedGrs] = useState([]);
-  const [grColumnSchema, setGrColumnSchema] =
-    useState(GrColumnSchema);
+  const [grColumnSchema, setGrColumnSchema] = useState(GrColumnSchema);
+
+  let history = useHistory();
 
   async function renderSchema() {
     grColumnSchema.at(-1).render = (text, record) => (
       <Space size="middle">
         <a
           onClick={() => {
-          
+            history.push(`/inventory/gr/${record._id}`);
           }}
         >
           <EyeOutlined />
@@ -39,7 +40,7 @@ const GrList = () => {
   useEffect(() => {
     renderSchema();
     if (grs.length > 0) {
-        setFormattedGrs(grs[0].grs);
+      setFormattedGrs(grs[0].grs);
     }
   }, [grs]);
 
@@ -68,7 +69,6 @@ const GrList = () => {
                 pageSizeOptions: ["10", "20", "30"],
               }}
             ></Table>
-            
           </div>
         </div>
       </div>

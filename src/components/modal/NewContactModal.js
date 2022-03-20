@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import payMethodFields from "../../constant/payMethodFields";
 import contactFields from "../../constant/contactFields";
+import { useSelector } from "react-redux";
 
 const NewContactModal = ({
   isModalVisible,
@@ -13,43 +14,61 @@ const NewContactModal = ({
   setEditContactId,
 }) => {
   const [form] = Form.useForm();
-  const [formData, setFormData] = useState({});
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [con, setCon] = useState([]);
+  const { contacts } = useSelector((state) => state.contacts);
+  const [refreshKey, setKey] = useState("");
 
   useEffect(() => {
-    setFormData({
-      _id: editContactId ?? null,
-      name: name,
-      code: code,
-      phone: phone,
-      email: email,
-    });
-  }, [name, code, phone, email]);
+    if (editContactId && contacts.length > 0) {
+      const con = contacts[0].contacts.find((x) => x._id == editContactId);
+      setName(con.name);
+      setCode(con.code);
+      setPhone(con.phone);
+      setEmail(con.email)
+      setCon(con);
+    }
+  }, [contacts, editContactId]);
 
+  const handleOnchange = (event) => {
+    setName(event.target.value);
+  };
   const handleOk = async () => {
-    if (!name) {
-      toast.error("Missing name!");
-      return;
+    if (!editContactId) {
+      if (!name) {
+        toast.error("Missing name!");
+        return;
+      }
+      if (!code) {
+        toast.error("Missing code!");
+        return;
+      }
     }
-    if (!code) {
-      toast.error("Missing code!");
-      return;
-    }
+    setKey(Date.now());
     await upsertPayMethod();
+    setEditContactId(null);
     setVisibleNewItemModal(false);
   };
 
   const handleCancel = () => {
+    setKey(Date.now());
     setVisibleNewItemModal(false);
+    setEditContactId(null);
   };
 
   const upsertPayMethod = async () => {
     axios
       .post("http://localhost:8000/api/contacts/upsertOne", {
-        data: formData,
+        data: {
+          _id: editContactId ?? null,
+          name: name,
+          code: code,
+          phone: phone,
+          email: email,
+        },
       })
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
@@ -94,6 +113,10 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setName(e.target.value)}
+                      placeholder={editContactId && con ? con.name : ""}
+                      key={refreshKey}
+                      value={name}
+                      defaultValue={con.name}
                     ></Input>
                   );
                   break;
@@ -102,6 +125,10 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setCode(e.target.value)}
+                      placeholder={editContactId && con ? con.code : ""}
+                      key={refreshKey}
+                      value={code}
+                      initialValue={con.code}
                     ></Input>
                   );
                   break;
@@ -110,6 +137,10 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setEmail(e.target.value)}
+                      placeholder={editContactId && con ? con.email : ""}
+                      key={refreshKey}
+                      value={email}
+                      initialValue={con.email}
                     ></Input>
                   );
                   break;
@@ -118,6 +149,10 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setPhone(e.target.value)}
+                      placeholder={editContactId && con ? con.phone : ""}
+                      key={refreshKey}
+                      value={phone}
+                      initialValue={con.phone}
                     ></Input>
                   );
                   break;

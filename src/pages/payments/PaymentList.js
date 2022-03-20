@@ -58,9 +58,7 @@ const PaymentList = () => {
       <Space size="middle">
         <a
           onClick={() => {
-            setModalTitle("Edit Mode");
-            setEditPayMethodId(record._id);
-            setVisibleNewItemModal(true);
+            
           }}
         >
           <RiseOutlined />

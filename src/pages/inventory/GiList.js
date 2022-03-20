@@ -1,5 +1,5 @@
 import { Table, Input, Space, Button, Modal } from "antd";
-import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { EditOutlined, RiseOutlined, EyeOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 
 import axios from "axios";
@@ -17,18 +17,24 @@ const GiList = () => {
   const { gis } = useSelector((state) => state.gis);
 
   const [formattedGis, setFormattedGis] = useState([]);
-  const [giColumnSchema, setGiColumnSchema] =
-    useState(GiColumnSchema);
-
+  const [giColumnSchema, setGiColumnSchema] = useState(GiColumnSchema);
+  let history = useHistory();
   async function renderSchema() {
     giColumnSchema.at(-1).render = (text, record) => (
       <Space size="middle">
         <a
           onClick={() => {
-          
+            history.push(`/inventory/gi/${record._id}`);
           }}
         >
           <EyeOutlined />
+        </a>
+        <a
+          onClick={() => {
+            history.push(`/sales/invoices/${record.invoice_id}`);
+          }}
+        >
+          <RiseOutlined />
         </a>
       </Space>
     );
@@ -38,7 +44,7 @@ const GiList = () => {
   useEffect(() => {
     renderSchema();
     if (gis.length > 0) {
-        setFormattedGis(gis[0].gis);
+      setFormattedGis(gis[0].gis);
     }
   }, [gis]);
 
@@ -67,7 +73,6 @@ const GiList = () => {
                 pageSizeOptions: ["10", "20", "30"],
               }}
             ></Table>
-            
           </div>
         </div>
       </div>
