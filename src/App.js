@@ -25,6 +25,7 @@ import GiList from "./pages/inventory/GiList.js";
 import Dashboard from "./pages/dashboard/Dashboard.js";
 import GrForm from "./pages/inventory/GrForm";
 import GiForm from "./pages/inventory/GiForm.js";
+import UomList from "./pages/others/UomList.js";
 
 const App = () =>{
   const dispatch = useDispatch()
@@ -61,6 +62,7 @@ const App = () =>{
         <Route exact path='/sales/invoices/:id' component={InvoiceForm}/>
         <Route exact path='/others/pay_methods' component={PayMethodList}/>
         <Route exact path='/others/contacts' component={ContactListing}/>
+        <Route exact path='/others/uoms' component={UomList}/>
         <Route exact path='/products' component={Listing}/>
         <Route exact path='/products/:id' component={ProductForm}/>
         <Route exact path='/login' component={Login}/>

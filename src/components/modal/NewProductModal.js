@@ -1,4 +1,4 @@
-import { Modal, Form, Col, Input, Row, InputNumber } from "antd";
+import { Modal, Form, Col, Input, Row, InputNumber, Select} from "antd";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
@@ -13,6 +13,7 @@ const NewProductModal = ({
   setEditProductId,
 }) => {
   const { products } = useSelector((state) => state.products);
+  const { uoms } = useSelector((state) => state.uoms);
 
   const [form] = Form.useForm();
   const [pro, setPro] = useState({});
@@ -21,6 +22,7 @@ const NewProductModal = ({
   const [price, setPrice] = useState("");
   const [uom, setUom] = useState("");
   const [refreshKey, setKey] = useState("");
+  const [uomOptions, setUomOptions] = useState([]);
 
   useEffect(() => {
     if (editProductId && products.length > 0) {
@@ -31,7 +33,17 @@ const NewProductModal = ({
       setPrice(pro.price);
       setUom(pro.uom);
     }
-  }, [products, editProductId]);
+    if (uoms.length > 0) {
+      let arr = [];
+      uoms[0].uoms.map((con) => {
+        arr.push({
+          value: con.name,
+          label: `${con.name}`,
+        });
+      });
+      setUomOptions(arr);
+    }
+  }, [products, uoms, editProductId]);
 
   const handleOk = async () => {
     if (!name) {
@@ -52,6 +64,10 @@ const NewProductModal = ({
     setKey(Date.now());
     setEditProductId(null);
     setVisibleProductModal(false);
+  };
+
+  const handleUomSelect = (value) => {
+    setUom(value);
   };
 
   const upsertProduct = async () => {
@@ -99,6 +115,7 @@ const NewProductModal = ({
                       allowClear={true}
                       key={refreshKey}
                       onChange={(e) => setName(e.target.value)}
+                      placeholder={editProductId?"":"Enter Name"}
                       value={name}
                     ></Input>
                   );
@@ -109,6 +126,7 @@ const NewProductModal = ({
                       allowClear={true}
                       key={refreshKey}
                       onChange={(e) => setCode(e.target.value)}
+                      placeholder={editProductId?"":"Enter Code"}
                       value={code}
                     ></Input>
                   );
@@ -118,6 +136,7 @@ const NewProductModal = ({
                     <InputNumber
                       key={refreshKey}
                       onChange={(value) => setPrice(value)}
+                      placeholder={editProductId?"":"Enter Price"}
                       value={price}
                       min={0}
                     ></InputNumber>
@@ -125,12 +144,23 @@ const NewProductModal = ({
                   break;
                 case "uom":
                   return (
-                    <Input
-                      key={refreshKey}
-                      allowClear={true}
-                      value={uom}
-                      onChange={(e) => setUom(e.target.value)}
-                    ></Input>
+                    <Select
+                    showSearch
+                    style={{ width: 150 }}
+                    placeholder="Select Uom"
+                    filterOption={(input, option) => {
+                      return (
+                        option.value
+                          ?.toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0 ||
+                        option.label
+                          ?.toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      );
+                    }}
+                    onSelect={handleUomSelect}
+                    options={uomOptions}
+                  ></Select>
                   );
                   break;
                 default:

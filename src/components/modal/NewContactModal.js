@@ -113,7 +113,7 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder={editContactId && con ? con.name : ""}
+                      placeholder={editContactId?"":"Enter Name"}
                       key={refreshKey}
                       value={name}
                       defaultValue={con.name}
@@ -125,7 +125,7 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setCode(e.target.value)}
-                      placeholder={editContactId && con ? con.code : ""}
+                      placeholder={editContactId?"":"Enter Code"}
                       key={refreshKey}
                       value={code}
                       initialValue={con.code}
@@ -137,7 +137,7 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder={editContactId && con ? con.email : ""}
+                      placeholder={editContactId?"":"Enter Email"}
                       key={refreshKey}
                       value={email}
                       initialValue={con.email}
@@ -149,7 +149,7 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder={editContactId && con ? con.phone : ""}
+                      placeholder={editContactId?"":"Enter Phone"}
                       key={refreshKey}
                       value={phone}
                       initialValue={con.phone}

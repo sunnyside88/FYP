@@ -20,7 +20,7 @@ const StatisticBanner = () => {
   useEffect(() => {
     if (invoices.length > 0 && grs.length > 0) {
       let total = 0;
-      setGrTotalCount(grs[0].grs.length)
+      setGrTotalCount(grs[0].grs.length);
       setInvTotalCount(invoices[0].invoices.length);
       invoices[0].invoices.map((x) => {
         total += x.cart_total;
@@ -28,6 +28,17 @@ const StatisticBanner = () => {
       setInvTotal(total.toFixed(2));
     }
   }, [invoices]);
+
+  const boxStyle = {
+    display: "center",
+    boxSizing: "content-box",
+    backgroundColor:"#EFFFFD",
+    padding: 10,
+    borderRadius: 10,
+    width:150,
+    justifyContent:'center',
+    boxShadow: "1px 3px 1px #9E9E9E"
+  };
 
   return (
     <div
@@ -37,9 +48,15 @@ const StatisticBanner = () => {
         justifyContent: "space-evenly",
       }}
     >
-      <Statistic title="Total Transactions" value={invoiceTotalCount} />
-      <Statistic title="Total GR" value={grTotalCount} />
-      <Statistic title="Total Sales" value={invoiceTotal} />
+      <div style={boxStyle}>
+        <Statistic valueStyle={{fontSize:30}} title="Total Transactions" value={invoiceTotalCount} />
+      </div>
+      <div style={boxStyle}>
+        <Statistic title="Total GR" value={grTotalCount} />
+      </div>
+      <div style={boxStyle}>
+        <Statistic title="Total Sales" value={invoiceTotal} />
+      </div>
     </div>
   );
 };

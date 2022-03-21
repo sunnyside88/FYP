@@ -29,6 +29,7 @@ const Header = () => {
     getGr();
     getGi();
     getPayMethods();
+    getUoms()
     getContacts();
     getInvoices();
     getPayments();
@@ -179,6 +180,23 @@ const Header = () => {
           type: "REFRESH_PAY_METHOD_LIST",
           payload: {
             payMethods: data,
+          },
+        });
+      });
+  }
+
+  async function getUoms() {
+    axios
+      .get("http://localhost:8000/api/uoms", { crossdomain: true })
+      .then((res) => {
+        let data = res.data;
+        data.forEach(function (element, index) {
+          Object.assign(element, { key: index });
+        });
+        dispatch({
+          type: "REFRESH_UOM_LIST",
+          payload: {
+            uoms: data,
           },
         });
       });

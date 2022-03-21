@@ -1,4 +1,4 @@
-import { Statistic, Row, Col, Button } from "antd";
+import { Typography, Divider } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 
@@ -12,10 +12,11 @@ import { useSelector } from "react-redux";
 import Sidebar from "../../components/nav/Sidebar";
 import Header from "../../components/nav/Header";
 
-import NewPayMethodModal from "../../components/modal/NewPayMethodModal";
-import PayMethodColumnSchema from "../../schema/payMethods/payMethodColumnSchema";
 import StatisticBanner from "./StatisticBanner";
 import ProductPie from "./ProductPie";
+import ProductTable from "./ProductTable";
+
+const { Text, Link } = Typography;
 
 const Dashboard = () => {
   return (
@@ -26,11 +27,26 @@ const Dashboard = () => {
         </div>
         <div className="col">
           <Header></Header>
-          <div className="col-4">
-          </div>
+          <div className="col-4"></div>
           <div>
             <StatisticBanner />
-            <ProductPie/>
+          </div>
+          <Divider></Divider>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              textAlign: "center",
+            }}
+          >
+            <div>
+              <Text type="secondary">Top 5 Best Selling Items</Text>
+              <ProductPie />
+            </div>
+            <div>
+            <Text type="secondary">Low Stock Count Items</Text>
+              <ProductTable />
+            </div>
           </div>
         </div>
       </div>

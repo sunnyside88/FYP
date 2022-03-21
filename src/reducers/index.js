@@ -8,6 +8,7 @@ import { paymentReducer } from "./paymentReducer";
 import { locationReducer } from "./locationReducer";
 import { grReducer } from "./grReducer";
 import { giReducer } from "./giReducer";
+import { uomReducer } from "./uomReducer";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   locations: locationReducer,
   grs: grReducer,
   gis: giReducer,
+  uoms:uomReducer,
 });
 
 export default rootReducer;
