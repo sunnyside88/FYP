@@ -66,7 +66,7 @@ const Header = () => {
   //Redux Store
   async function getProducts() {
     axios
-      .get("http://localhost:8000/api/products", { crossdomain: true })
+      .get("http://fast-shore-47363.herokuapp.com/api/products", { crossdomain: true })
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -83,7 +83,7 @@ const Header = () => {
 
   async function getPopularItem() {
     axios
-      .get("http://localhost:8000/api/gi/filterPopularItem", {
+      .get("http://fast-shore-47363.herokuapp.com/api/gi/filterPopularItem", {
         crossdomain: true,
       })
       .then((res) => {
@@ -102,7 +102,7 @@ const Header = () => {
 
   async function getGi() {
     axios
-      .get("http://localhost:8000/api/gis", { crossdomain: true })
+      .get("http://fast-shore-47363.herokuapp.com/api/gis", { crossdomain: true })
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -119,7 +119,7 @@ const Header = () => {
 
     async function getGr() {
       axios
-        .get("http://localhost:8000/api/grs", { crossdomain: true })
+        .get("http://fast-shore-47363.herokuapp.com/api/grs", { crossdomain: true })
         .then((res) => {
           let data = res.data;
           data.forEach(function (element, index) {
@@ -136,7 +136,7 @@ const Header = () => {
 
   async function getLocations() {
     axios
-      .get("http://localhost:8000/api/locations/", { crossdomain: true })
+      .get("http://fast-shore-47363.herokuapp.com/api/locations/", { crossdomain: true })
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -153,7 +153,7 @@ const Header = () => {
 
   async function getPayments() {
     axios
-      .get("http://localhost:8000/api/payments", { crossdomain: true })
+      .get("http://fast-shore-47363.herokuapp.com/api/payments", { crossdomain: true })
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -170,7 +170,7 @@ const Header = () => {
 
   async function getPayMethods() {
     axios
-      .get("http://localhost:8000/api/payMethods", { crossdomain: true })
+      .get("http://fast-shore-47363.herokuapp.com/api/payMethods", { crossdomain: true })
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -187,7 +187,7 @@ const Header = () => {
 
   async function getUoms() {
     axios
-      .get("http://localhost:8000/api/uoms", { crossdomain: true })
+      .get("http://fast-shore-47363.herokuapp.com/api/uoms", { crossdomain: true })
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -204,7 +204,7 @@ const Header = () => {
 
   async function getContacts() {
     axios
-      .get("http://localhost:8000/api/contacts", { crossdomain: true })
+      .get("http://fast-shore-47363.herokuapp.com/api/contacts", { crossdomain: true })
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -221,7 +221,7 @@ const Header = () => {
 
   async function getInvoices() {
     axios
-      .get("http://localhost:8000/api/invoices", { crossdomain: true })
+      .get("http://fast-shore-47363.herokuapp.com/api/invoices", { crossdomain: true })
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {

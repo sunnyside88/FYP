@@ -59,7 +59,7 @@ const GrForm = () => {
   useEffect(() => {
     const getGr = async () => {
       await axios
-        .get("http://localhost:8000/api/gr/" + id, { crossdomain: true })
+        .get("http://fast-shore-47363.herokuapp.com/api/gr/" + id, { crossdomain: true })
         .then((res) => {
           let data = res.data;
           setGr(data);

@@ -13,7 +13,7 @@ const ProductGeneralContent = () => {
   const { id } = useParams();
 
   async function getProduct() {
-    axios.get("http://localhost:8000/api/products/" + id, { crossdomain: true })
+    axios.get("http://fast-shore-47363.herokuapp.com/api/products/" + id, { crossdomain: true })
       .then(res => {
         let data = res.data
         setProduct(data)

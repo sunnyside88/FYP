@@ -66,7 +66,7 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
   };
 
   const createInvoice = async () => {
-    let res = await axios.post("http://localhost:8000/api/invoices/insertOne", {
+    let res = await axios.post("http://fast-shore-47363.herokuapp.com/api/invoices/insertOne", {
       data: formData.data,
     });
     return res.data._id;
@@ -85,7 +85,7 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
       status:"Approved",
       createdBy:formData.data.createdBy
     }
-    let res = await axios.post("http://localhost:8000/api/gi/insertOne", {
+    let res = await axios.post("http://fast-shore-47363.herokuapp.com/api/gi/insertOne", {
       data: gi_data,
     });
     return res.data._id;
@@ -96,7 +96,7 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
     paymentData["paid_amount"] = paidAmt;
     paymentData["change_amount"] = returnAmt;
     paymentData["invoice_id"] = invoice_id;
-    let res = await axios.post("http://localhost:8000/api/payments/insertOne", {
+    let res = await axios.post("http://fast-shore-47363.herokuapp.com/api/payments/insertOne", {
       data: paymentData,
     });
     setConfirmLoading(false);

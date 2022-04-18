@@ -72,7 +72,7 @@ const NewProductModal = ({
 
   const upsertProduct = async () => {
     axios
-      .post("http://localhost:8000/api/products/upsertOne", {
+      .post("http://fast-shore-47363.herokuapp.com/api/products/upsertOne", {
         data: {
           _id: editProductId ?? null,
           name: name,

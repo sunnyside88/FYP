@@ -48,7 +48,7 @@ const NewUomModal = ({
 
   const upsertUom = async () => {
     axios
-      .post("http://localhost:8000/api/uoms/upsertOne", {
+      .post("http://fast-shore-47363.herokuapp.com/api/uoms/upsertOne", {
         data: {
           _id: editUomId ?? null,
           name: name,

@@ -51,7 +51,7 @@ const NewPayMethodModal = ({
 
   const upsertPayMethod = async () => {
     axios
-      .post("http://localhost:8000/api/payMethod/upsertOne", {
+      .post("http://fast-shore-47363.herokuapp.com/api/payMethod/upsertOne", {
         data: {
           _id: editPayMethodId ?? null,
           name: name,

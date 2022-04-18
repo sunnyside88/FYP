@@ -45,7 +45,7 @@ const UomList = () => {
 
   async function deleteMethod(id) {
     axios
-      .post("http://localhost:8000/api/uoms/deleteOne", {
+      .post("http://fast-shore-47363.herokuapp.com/api/uoms/deleteOne", {
         id: id,
       })
       .then((res) => {

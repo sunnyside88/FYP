@@ -61,7 +61,7 @@ const NewContactModal = ({
 
   const upsertPayMethod = async () => {
     axios
-      .post("http://localhost:8000/api/contacts/upsertOne", {
+      .post("http://fast-shore-47363.herokuapp.com/api/contacts/upsertOne", {
         data: {
           _id: editContactId ?? null,
           name: name,

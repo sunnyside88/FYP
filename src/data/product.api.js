@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:8000/api/products/';
+const apiUrl = 'http://fast-shore-47363.herokuapp.com/api/products/';
 
 export const importFile = async (data, setProgress, setShowProgress) => {
     try {

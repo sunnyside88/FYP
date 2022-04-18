@@ -47,7 +47,7 @@ const Listing = () => {
 
   async function deleteProduct(id) {
     axios
-      .post("http://localhost:8000/api/products/deleteOne", {
+      .post("http://fast-shore-47363.herokuapp.com/api/products/deleteOne", {
         id: id,
       })
       .then((res) => {

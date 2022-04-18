@@ -92,7 +92,7 @@ const InvoiceForm = () => {
     
     const getInvoice = async () => {
       await axios
-        .get("http://localhost:8000/api/invoices/" + id, { crossdomain: true })
+        .get("http://fast-shore-47363.herokuapp.com/api/invoices/" + id, { crossdomain: true })
         .then((res) => {
           let data = res.data;
           setInvoice(data);

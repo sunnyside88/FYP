@@ -44,7 +44,7 @@ const PaymentList = () => {
 
   async function deleteMethod(id) {
     axios
-      .post("http://localhost:8000/api/payMethod/deleteOne", {
+      .post("http://fast-shore-47363.herokuapp.com/api/payMethod/deleteOne", {
         id: id,
       })
       .then((res) => {

@@ -41,7 +41,7 @@ const ContactListing = () => {
 
   async function deleteContact(id) {
     axios
-      .post("http://localhost:8000/api/contacts/deleteOne", {
+      .post("http://fast-shore-47363.herokuapp.com/api/contacts/deleteOne", {
         id: id,
       })
       .then((res) => {
