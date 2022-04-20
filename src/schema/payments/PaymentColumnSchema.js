@@ -15,6 +15,8 @@ export default [
     title: "Cart Total",
     dataIndex: "total",
     key: "total",
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.total - b.total,
   },
   {
     title: "Paid Amt",

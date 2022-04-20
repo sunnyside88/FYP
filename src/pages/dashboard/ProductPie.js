@@ -49,7 +49,7 @@ const ProductPie = () => {
       });
     }
   }, [popularItems]);
-  console.log(data);
+  console.log(data,"xxxdata");
   return (
     <div
       style={{

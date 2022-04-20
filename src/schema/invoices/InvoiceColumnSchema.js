@@ -16,12 +16,16 @@ export default [
     title: "Date",
     dataIndex: "createdAt",
     key: "createdAt",
-    render: (value) => moment(value).utc().format("YYYY-MM-DD"),
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => moment(a.createdAt).unix() - moment(b.createdAt).unix(),
+    render: (value) => moment(value).utc().format("YYYY-MM-DD HH:mm:ss"),
   },
   {
     title: "Paid Amount",
     dataIndex: "cart_total",
     key: "cart_total",
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.cart_total - b.cart_total,
   },
   {
     title: "Status",
