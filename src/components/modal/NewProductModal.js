@@ -1,4 +1,4 @@
-import { Modal, Form, Col, Input, Row, InputNumber, Select} from "antd";
+import { Modal, Form, Col, Input, Row, InputNumber, Select } from "antd";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ const NewProductModal = ({
 }) => {
   const { products } = useSelector((state) => state.products);
   const { uoms } = useSelector((state) => state.uoms);
+  let { user } = useSelector((state) => ({ ...state }));
 
   const [form] = Form.useForm();
   const [pro, setPro] = useState({});
@@ -23,6 +24,7 @@ const NewProductModal = ({
   const [uom, setUom] = useState("");
   const [refreshKey, setKey] = useState("");
   const [uomOptions, setUomOptions] = useState([]);
+  const [userToken, setUserToken] = useState("");
 
   useEffect(() => {
     if (editProductId && products.length > 0) {
@@ -43,7 +45,10 @@ const NewProductModal = ({
       });
       setUomOptions(arr);
     }
-  }, [products, uoms, editProductId]);
+    if (user) {
+      setUserToken(user.token);
+    }
+  }, [products, uoms, editProductId, user]);
 
   const handleOk = async () => {
     if (!name) {
@@ -72,15 +77,19 @@ const NewProductModal = ({
 
   const upsertProduct = async () => {
     axios
-      .post("http://fast-shore-47363.herokuapp.com/api/products/upsertOne", {
-        data: {
-          _id: editProductId ?? null,
-          name: name,
-          code: code,
-          price: price,
-          uom: uom,
+      .post(
+        "http://fast-shore-47363.herokuapp.com/api/products/upsertOne",
+        {
+          data: {
+            _id: editProductId ?? null,
+            name: name,
+            code: code,
+            price: price,
+            uom: uom,
+          },
         },
-      })
+        { headers: { userToken: `${userToken}` } }
+      )
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
         if (res.status == 200) {
@@ -115,7 +124,7 @@ const NewProductModal = ({
                       allowClear={true}
                       key={refreshKey}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder={editProductId?"":"Enter Name"}
+                      placeholder={editProductId ? "" : "Enter Name"}
                       value={name}
                     ></Input>
                   );
@@ -126,7 +135,7 @@ const NewProductModal = ({
                       allowClear={true}
                       key={refreshKey}
                       onChange={(e) => setCode(e.target.value)}
-                      placeholder={editProductId?"":"Enter Code"}
+                      placeholder={editProductId ? "" : "Enter Code"}
                       value={code}
                     ></Input>
                   );
@@ -136,7 +145,7 @@ const NewProductModal = ({
                     <InputNumber
                       key={refreshKey}
                       onChange={(value) => setPrice(value)}
-                      placeholder={editProductId?"":"Enter Price"}
+                      placeholder={editProductId ? "" : "Enter Price"}
                       value={price}
                       min={0}
                     ></InputNumber>
@@ -145,22 +154,22 @@ const NewProductModal = ({
                 case "uom":
                   return (
                     <Select
-                    showSearch
-                    style={{ width: 150 }}
-                    placeholder="Select Uom"
-                    filterOption={(input, option) => {
-                      return (
-                        option.value
-                          ?.toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0 ||
-                        option.label
-                          ?.toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      );
-                    }}
-                    onSelect={handleUomSelect}
-                    options={uomOptions}
-                  ></Select>
+                      showSearch
+                      style={{ width: 150 }}
+                      placeholder="Select Uom"
+                      filterOption={(input, option) => {
+                        return (
+                          option.value
+                            ?.toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0 ||
+                          option.label
+                            ?.toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                        );
+                      }}
+                      onSelect={handleUomSelect}
+                      options={uomOptions}
+                    ></Select>
                   );
                   break;
                 default:

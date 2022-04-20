@@ -29,6 +29,9 @@ const Listing = () => {
   const [modal, contextHolder] = Modal.useModal();
   const ReachableContext = createContext();
 
+  const [userToken, setUserToken] = useState("");
+  let { user } = useSelector((state) => ({ ...state }));
+  
   let history = useHistory();
   const dispatch = useDispatch();
 
@@ -47,9 +50,13 @@ const Listing = () => {
 
   async function deleteProduct(id) {
     axios
-      .post("http://fast-shore-47363.herokuapp.com/api/products/deleteOne", {
-        id: id,
-      })
+      .post(
+        "http://fast-shore-47363.herokuapp.com/api/products/deleteOne",
+        {
+          id: id,
+        },
+        { headers: { userToken: `${userToken}` } }
+      )
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
         console.log(res);
@@ -109,7 +116,10 @@ const Listing = () => {
       setFormattedProduct(products[0].products);
     }
     renderSchema();
-  }, [products]);
+    if (user) {
+      setUserToken(user.token);
+    }
+  }, [products, user]);
 
   //styling
   const { Search } = Input;
@@ -136,7 +146,12 @@ const Listing = () => {
               setEditProductId={setEditProductId}
             ></NewProductModal>
             <h3 style={{ marginTop: 10 }}>Product Listing</h3>
-            <Button onClick={showNewProduct} style={{ marginRight: 10 }} type="primary" shape="round">
+            <Button
+              onClick={showNewProduct}
+              style={{ marginRight: 10 }}
+              type="primary"
+              shape="round"
+            >
               {" "}
               New Product{" "}
             </Button>

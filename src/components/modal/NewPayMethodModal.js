@@ -17,8 +17,10 @@ const NewPayMethodModal = ({
   const [pm, setPm] = useState({});
   const [serviceCharge, setServiceCharge] = useState("");
   const [refreshKey, setKey] = useState("");
-
+  const [userToken, setUserToken] = useState("");
+  let { user } = useSelector((state) => ({ ...state }));
   const { payMethods } = useSelector((state) => state.payMethods);
+
   useEffect(() => {
     if (editPayMethodId && payMethods.length > 0) {
       let pm = payMethods[0].payMethods.find((x) => x._id == editPayMethodId);
@@ -26,7 +28,10 @@ const NewPayMethodModal = ({
       setName(pm.name);
       setServiceCharge(pm.service_charge);
     }
-  }, [payMethods, editPayMethodId]);
+    if (user) {
+      setUserToken(user.token);
+    }
+  }, [payMethods, editPayMethodId, user]);
 
   const handleOk = async () => {
     if (!name) {
@@ -39,25 +44,29 @@ const NewPayMethodModal = ({
     }
     setKey(Date.now());
     await upsertPayMethod();
-    setEditPayMethodId(null)
+    setEditPayMethodId(null);
     setVisibleNewItemModal(false);
   };
 
   const handleCancel = () => {
     setKey(Date.now());
-    setEditPayMethodId(null)
+    setEditPayMethodId(null);
     setVisibleNewItemModal(false);
   };
 
   const upsertPayMethod = async () => {
     axios
-      .post("http://fast-shore-47363.herokuapp.com/api/payMethod/upsertOne", {
-        data: {
-          _id: editPayMethodId ?? null,
-          name: name,
-          service_charge: serviceCharge,
+      .post(
+        "http://fast-shore-47363.herokuapp.com/api/payMethod/upsertOne",
+        {
+          data: {
+            _id: editPayMethodId ?? null,
+            name: name,
+            service_charge: serviceCharge,
+          },
         },
-      })
+        { headers: { userToken: `${userToken}` } }
+      )
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
         if (res.status == 200) {

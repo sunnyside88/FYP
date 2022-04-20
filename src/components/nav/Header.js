@@ -18,29 +18,14 @@ const Header = () => {
   const [formmattedDate, setFormattedDate] = useState("");
   const [formattedTime, setFormattedTime] = useState(moment().format("LT"));
   const [userName, setUserName] = useState("");
+  const [userToken, setUserToken] = useState("");
 
   let dispatch = useDispatch();
   let history = useHistory();
   let { user } = useSelector((state) => ({ ...state }));
 
   useEffect(() => {
-    console.log(user, "user");
-    getProducts();
-    getGr();
-    getGi();
-    getPayMethods();
-    getUoms()
-    getContacts();
-    getInvoices();
-    getPayments();
-    getLocations();
-    getPopularItem();
-    if (!user) {
-      //history.push('/login')
-      return;
-    }
-    let isMounted = true;
-    if (isMounted) {
+    if (user) {
       setInterval(() => {
         let time = moment().format("LT");
         setFormattedTime(time);
@@ -48,11 +33,21 @@ const Header = () => {
       let date = moment().format("MMMM Do YYYY");
       setFormattedDate(date);
       setUserName(user.email.substring(0, user.email.indexOf("@")));
+      setUserToken(user.token);
+      if (userToken) {
+        getProducts();
+        getGr();
+        getGi();
+        getPayMethods();
+        getUoms();
+        getContacts();
+        getInvoices();
+        getPayments();
+        getLocations();
+        getPopularItem();
+      }
     }
-    return () => {
-      isMounted = false;
-    };
-  }, [user]);
+  }, [user, userToken]);
 
   const logout = () => {
     auth.signOut();
@@ -65,8 +60,12 @@ const Header = () => {
 
   //Redux Store
   async function getProducts() {
-    axios
-      .get("http://fast-shore-47363.herokuapp.com/api/products", { crossdomain: true })
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/products",
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -82,10 +81,12 @@ const Header = () => {
   }
 
   async function getPopularItem() {
-    axios
-      .get("http://fast-shore-47363.herokuapp.com/api/gi/filterPopularItem", {
-        crossdomain: true,
-      })
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/gi/filterPopularItem",
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -101,8 +102,12 @@ const Header = () => {
   }
 
   async function getGi() {
-    axios
-      .get("http://fast-shore-47363.herokuapp.com/api/gis", { crossdomain: true })
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/gis",
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -117,26 +122,34 @@ const Header = () => {
       });
   }
 
-    async function getGr() {
-      axios
-        .get("http://fast-shore-47363.herokuapp.com/api/grs", { crossdomain: true })
-        .then((res) => {
-          let data = res.data;
-          data.forEach(function (element, index) {
-            Object.assign(element, { key: index });
-          });
-          dispatch({
-            type: "REFRESH_GR_LIST",
-            payload: {
-              grs: data,
-            },
-          });
+  async function getGr() {
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/grs",
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
+      .then((res) => {
+        let data = res.data;
+        data.forEach(function (element, index) {
+          Object.assign(element, { key: index });
         });
-    }
+        dispatch({
+          type: "REFRESH_GR_LIST",
+          payload: {
+            grs: data,
+          },
+        });
+      });
+  }
 
   async function getLocations() {
-    axios
-      .get("http://fast-shore-47363.herokuapp.com/api/locations/", { crossdomain: true })
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/locations/",
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -152,8 +165,12 @@ const Header = () => {
   }
 
   async function getPayments() {
-    axios
-      .get("http://fast-shore-47363.herokuapp.com/api/payments", { crossdomain: true })
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/payments",
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -169,8 +186,12 @@ const Header = () => {
   }
 
   async function getPayMethods() {
-    axios
-      .get("http://fast-shore-47363.herokuapp.com/api/payMethods", { crossdomain: true })
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/payMethods",
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -186,8 +207,12 @@ const Header = () => {
   }
 
   async function getUoms() {
-    axios
-      .get("http://fast-shore-47363.herokuapp.com/api/uoms", { crossdomain: true })
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/uoms",
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -203,8 +228,12 @@ const Header = () => {
   }
 
   async function getContacts() {
-    axios
-      .get("http://fast-shore-47363.herokuapp.com/api/contacts", { crossdomain: true })
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/contacts",
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {
@@ -220,8 +249,12 @@ const Header = () => {
   }
 
   async function getInvoices() {
-    axios
-      .get("http://fast-shore-47363.herokuapp.com/api/invoices", { crossdomain: true })
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/invoices",
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
       .then((res) => {
         let data = res.data;
         data.forEach(function (element, index) {

@@ -27,6 +27,9 @@ const PaymentList = () => {
   const [editPayMethodId, setEditPayMethodId] = useState("");
   const [visibleNewItemModal, setVisibleNewItemModal] = useState(false);
 
+  const [userToken, setUserToken] = useState("");
+  let { user } = useSelector((state) => ({ ...state }));
+  
   const [modal, contextHolder] = Modal.useModal();
   const ReachableContext = createContext();
 
@@ -44,9 +47,13 @@ const PaymentList = () => {
 
   async function deleteMethod(id) {
     axios
-      .post("http://fast-shore-47363.herokuapp.com/api/payMethod/deleteOne", {
-        id: id,
-      })
+      .post(
+        "http://fast-shore-47363.herokuapp.com/api/payMethod/deleteOne",
+        {
+          id: id,
+        },
+        { headers: { userToken: `${userToken}` } }
+      )
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
         console.log(res);
@@ -56,11 +63,7 @@ const PaymentList = () => {
   async function renderSchema() {
     methodColumnSchema.at(-1).render = (text, record) => (
       <Space size="middle">
-        <a
-          onClick={() => {
-            
-          }}
-        >
+        <a onClick={() => {}}>
           <RiseOutlined />
         </a>
       </Space>
@@ -82,21 +85,26 @@ const PaymentList = () => {
 
   useEffect(() => {
     renderSchema();
-    if (payments.length > 0 && payMethods.length>0) {
-        let lines = JSON.parse(JSON.stringify(payments[0].payments));
-        lines.forEach( element => {
-          let method = payMethods[0].payMethods.find((x) => x._id == element.pay_method_id).name
-          if (method) {
-            element["pay_method_id"] = method
-            element["total"] = element.total.toFixed(2)
-            element["paid_amount"] = element.paid_amount.toFixed(2)
-            element["change_amount"] = element.change_amount.toFixed(2)
-          }
-        });
-        setFormattedPayments(lines);
-        setPaymentForSearch(lines)
+    if (payments.length > 0 && payMethods.length > 0) {
+      let lines = JSON.parse(JSON.stringify(payments[0].payments));
+      lines.forEach((element) => {
+        let method = payMethods[0].payMethods.find(
+          (x) => x._id == element.pay_method_id
+        ).name;
+        if (method) {
+          element["pay_method_id"] = method;
+          element["total"] = element.total.toFixed(2);
+          element["paid_amount"] = element.paid_amount.toFixed(2);
+          element["change_amount"] = element.change_amount.toFixed(2);
+        }
+      });
+      setFormattedPayments(lines);
+      setPaymentForSearch(lines);
     }
-  }, [payments,payMethods]);
+    if (user) {
+      setUserToken(user.token);
+    }
+  }, [payments, payMethods]);
 
   //styling
   const { Search } = Input;

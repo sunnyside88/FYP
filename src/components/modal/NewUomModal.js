@@ -18,8 +18,10 @@ const NewUomModal = ({
   const [name, setName] = useState("");
   const [uom, setUom] = useState({});
   const [refreshKey, setKey] = useState("");
+  const [userToken, setUserToken] = useState("");
 
   const { uoms } = useSelector((state) => state.uoms);
+  let { user } = useSelector((state) => ({ ...state }));
 
   useEffect(() => {
     if (editUomId && uoms.length > 0) {
@@ -27,7 +29,10 @@ const NewUomModal = ({
       setUom(uom);
       setName(uom.name);
     }
-  }, [uoms, editUomId]);
+    if (user) {
+      setUserToken(user.token);
+    }
+  }, [uoms, editUomId, user]);
 
   const handleOk = async () => {
     if (!name) {
@@ -48,12 +53,16 @@ const NewUomModal = ({
 
   const upsertUom = async () => {
     axios
-      .post("http://fast-shore-47363.herokuapp.com/api/uoms/upsertOne", {
-        data: {
-          _id: editUomId ?? null,
-          name: name,
+      .post(
+        "http://fast-shore-47363.herokuapp.com/api/uoms/upsertOne",
+        {
+          data: {
+            _id: editUomId ?? null,
+            name: name,
+          },
         },
-      })
+        { headers: { userToken: `${userToken}` } }
+      )
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
         if (res.status == 200) {
@@ -76,7 +85,7 @@ const NewUomModal = ({
         <Col span={8} key={index}>
           <Form.Item
             name={`${key}`}
-            label={`${uomFields[0][key]}`}    
+            label={`${uomFields[0][key]}`}
             rules={[
               {
                 required: true,
@@ -89,7 +98,7 @@ const NewUomModal = ({
               value={name}
               key={refreshKey}
               onChange={(e) => handleOnchangeName(e)}
-              placeholder={editUomId?"":"Enter Uom"}
+              placeholder={editUomId ? "" : "Enter Uom"}
             ></Input>
 
             <br></br>

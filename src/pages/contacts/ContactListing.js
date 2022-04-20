@@ -17,6 +17,8 @@ import NewContactModal from "../../components/modal/NewContactModal";
 
 const ContactListing = () => {
   const { contacts } = useSelector((state) => state.contacts);
+  const [userToken, setUserToken] = useState("");
+  let { user } = useSelector((state) => ({ ...state }));
 
   const [formattedContact, setFormattedContact] = useState([]);
   const [contactColumnSchema, setContactColumnSchema] = useState(ContactSchema);
@@ -31,6 +33,12 @@ const ContactListing = () => {
   let history = useHistory();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (user) {
+      setUserToken(user.token);
+    }
+  }, [user]);
+
   const showImport = () => {
     setModalTitle("New Contact");
     setVisibleContactModal(true);
@@ -41,9 +49,13 @@ const ContactListing = () => {
 
   async function deleteContact(id) {
     axios
-      .post("http://fast-shore-47363.herokuapp.com/api/contacts/deleteOne", {
-        id: id,
-      })
+      .post(
+        "http://fast-shore-47363.herokuapp.com/api/contacts/deleteOne",
+        {
+          id: id,
+        },
+        { headers: { userToken: `${userToken}` } }
+      )
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
         console.log(res);

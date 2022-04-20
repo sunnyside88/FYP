@@ -27,7 +27,7 @@ const SideBar = () => {
           },
           {
             title: "Inventory",
-            itemId: "#",
+            itemId: "##",
             subNav: [
               {
                 title: "Stock Locations",
@@ -45,7 +45,7 @@ const SideBar = () => {
           },
           {
             title: "Sales",
-            itemId: "#",
+            itemId: "###",
             subNav: [
               {
                 title: "POS",
@@ -63,7 +63,7 @@ const SideBar = () => {
           },
           {
             title: "Product",
-            itemId: "#",
+            itemId: "####",
             subNav: [
               {
                 title: "All Products",
@@ -73,7 +73,7 @@ const SideBar = () => {
           },
           {
             title: "Others",
-            itemId: "#",
+            itemId: "######",
             subNav: [
               {
                 title: "Payment Methods",

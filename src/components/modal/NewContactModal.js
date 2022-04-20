@@ -20,7 +20,9 @@ const NewContactModal = ({
   const [email, setEmail] = useState("");
   const [con, setCon] = useState([]);
   const { contacts } = useSelector((state) => state.contacts);
+  let { user } = useSelector((state) => ({ ...state }));
   const [refreshKey, setKey] = useState("");
+  const [userToken, setUserToken] = useState("");
 
   useEffect(() => {
     if (editContactId && contacts.length > 0) {
@@ -28,10 +30,13 @@ const NewContactModal = ({
       setName(con.name);
       setCode(con.code);
       setPhone(con.phone);
-      setEmail(con.email)
+      setEmail(con.email);
       setCon(con);
     }
-  }, [contacts, editContactId]);
+    if (user) {
+      setUserToken(user.token);
+    }
+  }, [contacts, editContactId, user]);
 
   const handleOnchange = (event) => {
     setName(event.target.value);
@@ -61,15 +66,19 @@ const NewContactModal = ({
 
   const upsertPayMethod = async () => {
     axios
-      .post("http://fast-shore-47363.herokuapp.com/api/contacts/upsertOne", {
-        data: {
-          _id: editContactId ?? null,
-          name: name,
-          code: code,
-          phone: phone,
-          email: email,
+      .post(
+        "http://fast-shore-47363.herokuapp.com/api/contacts/upsertOne",
+        {
+          data: {
+            _id: editContactId ?? null,
+            name: name,
+            code: code,
+            phone: phone,
+            email: email,
+          },
         },
-      })
+        { headers: { userToken: `${userToken}` } }
+      )
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
         if (res.status == 200) {
@@ -113,7 +122,7 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder={editContactId?"":"Enter Name"}
+                      placeholder={editContactId ? "" : "Enter Name"}
                       key={refreshKey}
                       value={name}
                       defaultValue={con.name}
@@ -125,7 +134,7 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setCode(e.target.value)}
-                      placeholder={editContactId?"":"Enter Code"}
+                      placeholder={editContactId ? "" : "Enter Code"}
                       key={refreshKey}
                       value={code}
                       initialValue={con.code}
@@ -137,7 +146,7 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder={editContactId?"":"Enter Email"}
+                      placeholder={editContactId ? "" : "Enter Email"}
                       key={refreshKey}
                       value={email}
                       initialValue={con.email}
@@ -149,7 +158,7 @@ const NewContactModal = ({
                     <Input
                       allowClear={true}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder={editContactId?"":"Enter Phone"}
+                      placeholder={editContactId ? "" : "Enter Phone"}
                       key={refreshKey}
                       value={phone}
                       initialValue={con.phone}

@@ -8,7 +8,7 @@ import { auth } from "./firebase.js";
 import RegisterComplete from "./pages/auth/RegisterComplete.js";
 import { useHistory } from "react-router";
 
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ForgotPassword from "./pages/auth/ForgotPassword.js";
 import Listing from "./pages/product/ProductListing.js";
@@ -42,6 +42,10 @@ const App = () =>{
             token:idTokenResult.token,
           },
         });
+      }
+      else{
+        history.push('/login')
+        toast.error("Unauthorized access! Please login")
       }
     });
     return () => unsubcribe();

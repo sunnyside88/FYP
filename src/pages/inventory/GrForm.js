@@ -20,13 +20,14 @@ import axios from "axios";
 import Sidebar from "../../components/nav/Sidebar";
 import Header from "../../components/nav/Header";
 
-
 import grFields from "../../constant/grFields";
 import GrLineSchema from "../../schema/inventory/GrLineSchema";
+import { useSelector } from "react-redux";
 
 const GrForm = () => {
-
   const [gr, setGr] = useState("");
+  const [userToken, setUserToken] = useState("");
+  let { user } = useSelector((state) => ({ ...state }));
 
   const [form] = Form.useForm();
   const { Panel } = Collapse;
@@ -54,19 +55,26 @@ const GrForm = () => {
     console.log("Received values of form: ", values);
   };
 
-  
-
   useEffect(() => {
     const getGr = async () => {
       await axios
-        .get("http://fast-shore-47363.herokuapp.com/api/gr/" + id, { crossdomain: true })
+        .get(
+          "http://fast-shore-47363.herokuapp.com/api/gr/" + id,
+          { headers: { userToken: `${userToken}` } },
+          { crossdomain: true },
+        )
         .then((res) => {
           let data = res.data;
           setGr(data);
         });
     };
-    getGr();
-  }, []);
+    if (user) {
+      setUserToken(user.token);
+      if(userToken){
+        getGr();
+      }
+    }
+  }, [user,userToken]);
 
   return (
     <div className="container-fluid p-0">
@@ -110,7 +118,7 @@ const GrForm = () => {
                     columns={GrLineSchema}
                   ></Table>
                 </Panel>
-              </Collapse>   
+              </Collapse>
             </Form>
           </div>
           <div style={{ padding: 10 }}></div>

@@ -1,7 +1,7 @@
 import { Typography, Divider } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
-
+import { getAuth } from "firebase/auth";
 import axios from "axios";
 
 import { useEffect, useState, createContext } from "react";
@@ -19,6 +19,13 @@ import ProductTable from "./ProductTable";
 const { Text, Link } = Typography;
 
 const Dashboard = () => {
+  let { user } = useSelector((state) => ({ ...state }));
+  useEffect(() => {
+    if(user){
+      console.log(user,"xxdash");
+    }
+  }, []);
+
   return (
     <div className="container-fluid p-0">
       <div className="row no-gutters">
@@ -44,7 +51,7 @@ const Dashboard = () => {
               <ProductPie />
             </div>
             <div>
-            <Text type="secondary">Low Stock Count Items</Text>
+              <Text type="secondary">Low Stock Count Items</Text>
               <ProductTable />
             </div>
           </div>

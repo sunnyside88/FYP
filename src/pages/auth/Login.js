@@ -1,7 +1,7 @@
 import { Card, Button, Container, Spinner,Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import logo from '../../assets/Logo.png';
 import ForgotPassword from './ForgotPassword';
 import { auth, googleAuthProvider } from '../../firebase.js'
@@ -24,6 +24,7 @@ const Login = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  let { user } = useSelector((state) => ({ ...state }));
 
   const [show, setShow] = useState(false);
 
@@ -31,6 +32,9 @@ const Login = ({ history }) => {
   const handleShow = () => setShow(true);
 
   const dispatch = useDispatch()
+  useEffect(()=>{
+    console.log(user,"xxxuser");
+  })
   const handleLogIn = async (e) => {
     e.preventDefault()
     try {

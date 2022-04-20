@@ -37,11 +37,13 @@ const InvoiceForm = () => {
   const [payment, setPayment] = useState([]);
   const [gi, setGi] = useState([]);
 
-
   const [form] = Form.useForm();
   const { Panel } = Collapse;
 
   const { id } = useParams();
+
+  const [userToken, setUserToken] = useState("");
+  let { user } = useSelector((state) => ({ ...state }));
 
   const getFields = () => {
     const children = [];
@@ -76,7 +78,7 @@ const InvoiceForm = () => {
     if (payments.length > 0) {
       let pv = payments[0].payments.find((x) => x.invoice_id == invoice._id);
       let pm = payMethods[0].payMethods.find((x) => x._id == pv.pay_method_id);
-      pv["pay_method_name"] = pm.name
+      pv["pay_method_name"] = pm.name;
       setPayment([pv]);
     }
   }
@@ -89,17 +91,25 @@ const InvoiceForm = () => {
   }
 
   useEffect(() => {
-    
-    const getInvoice = async () => {
-      await axios
-        .get("http://fast-shore-47363.herokuapp.com/api/invoices/" + id, { crossdomain: true })
-        .then((res) => {
-          let data = res.data;
-          setInvoice(data);
-        });
-    };
-    getInvoice();
-  }, [payments]);
+    if (user) {
+      const getInvoice = async () => {
+        await axios
+          .get(
+            "http://localhost:8000/api/invoices/" + id,
+            { headers: { userToken: `${userToken}` } },
+            { crossdomain: true }
+          )
+          .then((res) => {
+            let data = res.data;
+            setInvoice(data);
+          });
+      };
+      setUserToken(user.token);
+      if (userToken) {
+        getInvoice();
+      }
+    }
+  }, [payments, user, userToken]);
 
   return (
     <div className="container-fluid p-0">
@@ -158,10 +168,7 @@ const InvoiceForm = () => {
               <Divider></Divider>
               <Collapse onChange={callbackGI}>
                 <Panel header="Goods Issue" key="3">
-                  <Table
-                    dataSource={gi}
-                    columns={GiColumnSchema}
-                  ></Table>
+                  <Table dataSource={gi} columns={GiColumnSchema}></Table>
                 </Panel>
               </Collapse>
             </Form>

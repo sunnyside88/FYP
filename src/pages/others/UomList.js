@@ -1,5 +1,5 @@
 import { Table, Input, Space, Button, Modal } from "antd";
-import {EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 
 import axios from "axios";
@@ -21,13 +21,12 @@ const UomList = () => {
   const { uoms } = useSelector((state) => state.uoms);
 
   const [formattedUom, setFormattedUom] = useState([]);
-  const [uomColumnSchema, setUomColumnSchema] = useState(
-    UomColumnSchema
-  );
+  const [uomColumnSchema, setUomColumnSchema] = useState(UomColumnSchema);
   const [modalTitle, setModalTitle] = useState("");
-  const [editUomId, setUomId] = useState("")
+  const [editUomId, setUomId] = useState("");
   const [visibleNewItemModal, setVisibleNewItemModal] = useState(false);
-
+  const [userToken, setUserToken] = useState("");
+  let { user } = useSelector((state) => ({ ...state }));
   const [modal, contextHolder] = Modal.useModal();
   const ReachableContext = createContext();
 
@@ -45,9 +44,13 @@ const UomList = () => {
 
   async function deleteMethod(id) {
     axios
-      .post("http://fast-shore-47363.herokuapp.com/api/uoms/deleteOne", {
-        id: id,
-      })
+      .post(
+        "http://fast-shore-47363.herokuapp.com/api/uoms/deleteOne",
+        {
+          id: id,
+        },
+        { headers: { userToken: `${userToken}` } }
+      )
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
         console.log(res);
@@ -60,7 +63,7 @@ const UomList = () => {
         <a
           onClick={() => {
             setModalTitle("Edit Mode");
-            setUomId(record._id)
+            setUomId(record._id);
             setVisibleNewItemModal(true);
           }}
         >
@@ -104,9 +107,12 @@ const UomList = () => {
   useEffect(() => {
     renderSchema();
     if (uoms.length > 0) {
-        setFormattedUom(uoms[0].uoms);
+      setFormattedUom(uoms[0].uoms);
     }
-  }, [uoms]);
+    if (user) {
+      setUserToken(user.token);
+    }
+  }, [uoms, user]);
 
   //styling
   const { Search } = Input;

@@ -18,10 +18,12 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const { contacts } = useSelector((state) => state.contacts);
   const { payMethods } = useSelector((state) => state.payMethods);
+  let { user } = useSelector((state) => ({ ...state }));
   const [paidAmt, setPaidAmt] = useState(0);
   const [returnAmt, setReturnAmt] = useState(0);
   const [customerName, setCustomerName] = useState("");
   const [payMethodName, setPayMethodName] = useState("");
+  const [userToken, setUserToken] = useState("");
   const style = { background: "#0092ff", padding: "8px 0" };
   const { Text, Link } = Typography;
 
@@ -33,7 +35,10 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
     if (payMethods.length > 0 && formData.payMethodId) {
       findPayMethodName();
     }
-  }, [formData, contacts, payMethods]);
+    if (user) {
+      setUserToken(user.token);
+    }
+  }, [formData, contacts, payMethods,user]);
 
   const handleCancel = (e) => {
     e.stopPropagation();
@@ -44,8 +49,8 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
     e.stopPropagation();
     setConfirmLoading(true);
     let invoice_id = await createInvoice();
-    let paymeny_id = await createPayment(invoice_id)
-    let gi_id = await createGi(invoice_id)
+    let paymeny_id = await createPayment(invoice_id);
+    let gi_id = await createGi(invoice_id);
   };
 
   const numberFormatter = (val) => {
@@ -66,44 +71,50 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
   };
 
   const createInvoice = async () => {
-    let res = await axios.post("http://fast-shore-47363.herokuapp.com/api/invoices/insertOne", {
-      data: formData.data,
-    });
+    let res = await axios.post(
+      "http://fast-shore-47363.herokuapp.com/api/invoices/insertOne",
+      { data: formData.data },
+      { headers: { userToken: `${userToken}` } }
+    );
     return res.data._id;
   };
 
-  const createGi = async (invoice_id) =>{
+  const createGi = async (invoice_id) => {
     let stock_pick_lines = JSON.parse(JSON.stringify(formData.data.cart));
-    stock_pick_lines.forEach(x=>{
-      delete x.price
-    })
-    let gi_data = {
-      invoice_id:invoice_id,
-      from_location:"Main Warehouse",
-      to_location:"Customer",
-      stock_pick_lines:stock_pick_lines,
-      status:"Approved",
-      createdBy:formData.data.createdBy
-    }
-    let res = await axios.post("http://fast-shore-47363.herokuapp.com/api/gi/insertOne", {
-      data: gi_data,
+    stock_pick_lines.forEach((x) => {
+      delete x.price;
     });
+    let gi_data = {
+      invoice_id: invoice_id,
+      from_location: "Main Warehouse",
+      to_location: "Customer",
+      stock_pick_lines: stock_pick_lines,
+      status: "Approved",
+      createdBy: formData.data.createdBy,
+    };
+    let res = await axios.post(
+      "http://fast-shore-47363.herokuapp.com/api/gi/insertOne",
+      { data: gi_data },
+      { headers: { userToken: `${userToken}` } }
+    );
     return res.data._id;
-  }
+  };
 
   const createPayment = async (invoice_id) => {
     let paymentData = formData.paymentData;
     paymentData["paid_amount"] = paidAmt;
     paymentData["change_amount"] = returnAmt;
     paymentData["invoice_id"] = invoice_id;
-    let res = await axios.post("http://fast-shore-47363.herokuapp.com/api/payments/insertOne", {
-      data: paymentData,
-    });
+    let res = await axios.post(
+      "http://fast-shore-47363.herokuapp.com/api/payments/insertOne",
+      { data: paymentData },
+      { headers: { userToken: `${userToken}` } }
+    );
     setConfirmLoading(false);
     setVisible(false);
     toast.success("Transaction recorded!");
     window.location.reload();
-    return res
+    return res;
   };
 
   const renderAmtSuggestion = () => {

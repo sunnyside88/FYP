@@ -1,5 +1,5 @@
 import { Table, Input, Space, Button, Modal } from "antd";
-import {EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 
 import axios from "axios";
@@ -16,13 +16,14 @@ import PayMethodColumnSchema from "../../schema/payMethods/payMethodColumnSchema
 
 const PayMethodList = () => {
   const { payMethods } = useSelector((state) => state.payMethods);
-  
+  const [userToken, setUserToken] = useState("");
+  let { user } = useSelector((state) => ({ ...state }));
   const [formattedMethods, setFormattedMethods] = useState([]);
   const [methodColumnSchema, setMethodColumnSchema] = useState(
     PayMethodColumnSchema
   );
   const [modalTitle, setModalTitle] = useState("");
-  const [editPayMethodId, setEditPayMethodId] = useState("")
+  const [editPayMethodId, setEditPayMethodId] = useState("");
   const [visibleNewItemModal, setVisibleNewItemModal] = useState(false);
 
   const [modal, contextHolder] = Modal.useModal();
@@ -42,9 +43,13 @@ const PayMethodList = () => {
 
   async function deleteMethod(id) {
     axios
-      .post("http://fast-shore-47363.herokuapp.com/api/payMethod/deleteOne", {
-        id: id,
-      })
+      .post(
+        "http://fast-shore-47363.herokuapp.com/api/payMethod/deleteOne",
+        {
+          id: id,
+        },
+        { headers: { userToken: `${userToken}` } }
+      )
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
         console.log(res);
@@ -57,7 +62,7 @@ const PayMethodList = () => {
         <a
           onClick={() => {
             setModalTitle("Edit Mode");
-            setEditPayMethodId(record._id)
+            setEditPayMethodId(record._id);
             setVisibleNewItemModal(true);
           }}
         >
@@ -103,7 +108,10 @@ const PayMethodList = () => {
     if (payMethods.length > 0) {
       setFormattedMethods(payMethods[0].payMethods);
     }
-  }, [payMethods]);
+    if (user) {
+      setUserToken(user.token);
+    }
+  }, [payMethods, user]);
 
   //styling
   const { Search } = Input;
