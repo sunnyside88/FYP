@@ -5,6 +5,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import "antd/dist/antd.css";
+import { toast } from "react-toastify";
 
 import axios from "axios";
 
@@ -42,18 +43,24 @@ const InvoiceListing = () => {
     setVisibleImport(false);
   };
 
-  async function deleteProduct(id) {
-    axios
+  async function refund(id) {
+    await axios
       .post(
-        "http://fast-shore-47363.herokuapp.com/api/products/deleteOne",
+        "http://localhost:8000/api/invoices/update",
         {
-          id: id,
+          data: {
+            _id:id,
+            status:"VOIDED"
+          },
         },
         { headers: { userToken: `${userToken}` } }
       )
       .then((res) => {
         console.log(`statusCode: ${res.status}`);
-        console.log(res);
+        if (res.status == 200) {
+          toast.success("Refunded Successfully!");
+          window.location.reload();
+        }
       });
   }
 
@@ -88,7 +95,10 @@ const InvoiceListing = () => {
                   <p>Are you sure you want to refund this?</p>
                 </>
               ),
-              onOk: async () => {},
+              onOk: async () => {
+                await refund(record._id)
+                window.location.reload();
+              },
             };
             modal.confirm(deleteConfig);
           }}

@@ -35,6 +35,9 @@ export default [
       if (value == "PAID") {
         return <Tag color="success">{value}</Tag>;
       }
+      else if (value == 'VOIDED'){
+        return <Tag color="warning">{value}</Tag>
+      }
     },
   },
   {

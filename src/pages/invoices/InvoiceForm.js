@@ -95,7 +95,7 @@ const InvoiceForm = () => {
       const getInvoice = async () => {
         await axios
           .get(
-            "http://localhost:8000/api/invoices/" + id,
+            "http://fast-shore-47363.herokuapp.com/api/invoices/" + id,
             { headers: { userToken: `${userToken}` } },
             { crossdomain: true }
           )
@@ -128,7 +128,8 @@ const InvoiceForm = () => {
                   .utc()
                   .format("MMMM Do YYYY, h:mm:ss a")}
               </Tag>
-              <Tag color="green">{invoice.status}</Tag>
+              {invoice.status=="PAID"?(<Tag color="green">{invoice.status}</Tag>):(<Tag color="warning">{invoice.status}</Tag>)}
+              {/* <Tag color="green">{invoice.status}</Tag> */}
             </Space>
             <Divider style={{ marginTop: 10 }}></Divider>
             <Form
