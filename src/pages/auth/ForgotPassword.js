@@ -36,7 +36,6 @@ const ForgotPassword = () => {
                             <img style={{ width: "100%" }} src={clipInternetSecurity} alt="clip-internet-security.png" />
                         </div>
                         <div style={{ paddingTop:"20px" }} className="col">
-                            <h1>Forgot your password?</h1>
                             <br/ >
                             <h3>Dont' worry, we got you.</h3>
                             <br/ >

@@ -1,4 +1,4 @@
-import { Table, Input, Space, Button, Modal } from "antd";
+import { Table, Input, Space, Button, Modal, Spin } from "antd";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 
@@ -31,7 +31,7 @@ const Listing = () => {
 
   const [userToken, setUserToken] = useState("");
   let { user } = useSelector((state) => ({ ...state }));
-  
+
   let history = useHistory();
   const dispatch = useDispatch();
 
@@ -49,7 +49,7 @@ const Listing = () => {
   };
 
   async function deleteProduct(id) {
-    axios
+    await axios
       .post(
         "http://fast-shore-47363.herokuapp.com/api/products/deleteOne",
         {
@@ -172,15 +172,21 @@ const Listing = () => {
           </div>
 
           <div style={{ padding: 10 }}>
-            <Table
-              dataSource={formattedProduct}
-              columns={productColumnSchema}
-              pagination={{
-                defaultPageSize: 10,
-                showSizeChanger: true,
-                pageSizeOptions: ["10", "20", "30"],
-              }}
-            ></Table>
+            {formattedProduct ? (
+              <Table
+                dataSource={formattedProduct}
+                columns={productColumnSchema}
+                pagination={{
+                  defaultPageSize: 10,
+                  showSizeChanger: true,
+                  pageSizeOptions: ["10", "20", "30"],
+                }}
+              ></Table>
+            ) : (
+              <div style={{ alignItems: "center", textAlign: "center" }}>
+                <Spin tip="Loading..."></Spin>
+              </div>
+            )}
             {contextHolder}
           </div>
         </div>

@@ -43,7 +43,7 @@ const UomList = () => {
   };
 
   async function deleteMethod(id) {
-    axios
+    await axios
       .post(
         "http://fast-shore-47363.herokuapp.com/api/uoms/deleteOne",
         {

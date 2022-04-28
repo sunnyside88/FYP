@@ -45,7 +45,7 @@ const App = () =>{
       }
       else{
         history.push('/login')
-        toast.error("Unauthorized access! Please login")
+        toast.warning("You have logged out!")
       }
     });
     return () => unsubcribe();

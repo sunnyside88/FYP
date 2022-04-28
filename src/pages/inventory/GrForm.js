@@ -11,6 +11,7 @@ import {
   Table,
   Tag,
   Space,
+  Spin,
 } from "antd";
 import moment from "moment";
 
@@ -94,6 +95,9 @@ const GrForm = () => {
               <Tag color="green">{gr.status}</Tag>
             </Space>
             <Divider style={{ marginTop: 10 }}></Divider>
+            <div style={{ alignItems: "center", textAlign: "center" }}>
+              {gr ? null : <Spin tip="Loading..."></Spin>}
+            </div>
             <Form
               form={form}
               name="advanced_search"

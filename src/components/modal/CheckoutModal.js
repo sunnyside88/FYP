@@ -38,7 +38,7 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
     if (user) {
       setUserToken(user.token);
     }
-  }, [formData, contacts, payMethods,user]);
+  }, [formData, contacts, payMethods, user]);
 
   const handleCancel = (e) => {
     e.stopPropagation();
@@ -97,6 +97,10 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
       { data: gi_data },
       { headers: { userToken: `${userToken}` } }
     );
+    setConfirmLoading(false);
+    setVisible(false);
+    toast.success("Transaction recorded!");
+    window.location.reload();
     return res.data._id;
   };
 
@@ -110,10 +114,6 @@ const CheckoutModal = ({ isModalVisible, setVisible, formData }) => {
       { data: paymentData },
       { headers: { userToken: `${userToken}` } }
     );
-    setConfirmLoading(false);
-    setVisible(false);
-    toast.success("Transaction recorded!");
-    window.location.reload();
     return res;
   };
 

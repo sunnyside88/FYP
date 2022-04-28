@@ -12,6 +12,7 @@ import {
   Table,
   Tag,
   Space,
+  Spin,
 } from "antd";
 import moment from "moment";
 
@@ -90,20 +91,21 @@ const InvoiceForm = () => {
     }
   }
 
+  const getInvoice = async () => {
+    await axios
+      .get(
+        "http://fast-shore-47363.herokuapp.com/api/invoices/" + id,
+        { headers: { userToken: `${userToken}` } },
+        { crossdomain: true }
+      )
+      .then((res) => {
+        let data = res.data;
+        setInvoice(data);
+      });
+  };
+
   useEffect(() => {
     if (user) {
-      const getInvoice = async () => {
-        await axios
-          .get(
-            "http://fast-shore-47363.herokuapp.com/api/invoices/" + id,
-            { headers: { userToken: `${userToken}` } },
-            { crossdomain: true }
-          )
-          .then((res) => {
-            let data = res.data;
-            setInvoice(data);
-          });
-      };
       setUserToken(user.token);
       if (userToken) {
         getInvoice();
@@ -128,10 +130,17 @@ const InvoiceForm = () => {
                   .utc()
                   .format("MMMM Do YYYY, h:mm:ss a")}
               </Tag>
-              {invoice.status=="PAID"?(<Tag color="green">{invoice.status}</Tag>):(<Tag color="warning">{invoice.status}</Tag>)}
+              {invoice.status == "PAID" ? (
+                <Tag color="green">{invoice.status}</Tag>
+              ) : (
+                <Tag color="warning">{invoice.status}</Tag>
+              )}
               {/* <Tag color="green">{invoice.status}</Tag> */}
             </Space>
             <Divider style={{ marginTop: 10 }}></Divider>
+            <div style={{ alignItems: "center", textAlign: "center" }}>
+              {invoice ? null : <Spin tip="Loading..."></Spin>}
+            </div>
             <Form
               form={form}
               name="advanced_search"

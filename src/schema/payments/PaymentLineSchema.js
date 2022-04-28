@@ -41,10 +41,9 @@ export default [
       if (value == "Posted") {
         return <Tag color="success">{value}</Tag>;
       }
+      else if (value == 'VOIDED'){
+        return <Tag color="warning">{value}</Tag>
+      }
     },
-  },
-  {
-    title: "Action",
-    key: "action",
   },
 ];

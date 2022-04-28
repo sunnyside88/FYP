@@ -30,13 +30,4 @@ export default [
     key: "line_total",
     render: (value) => value.toFixed(2),
   },
-  {
-    title: "Action",
-    key: "action",
-    render: (value) => (
-      <a>
-        <EyeOutlined />
-      </a>
-    ),
-  },
 ];
